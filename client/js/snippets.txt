@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<SYNSET>
+	<ID>ENG20-00086194-b</ID>
+	<STAMP>xkleteck 2017-07-27 08:20:39</STAMP>
+	<ILI/>
+	<SUMO type="+">Investigating</SUMO>
+	<ILR type="also_see" def="relying on observation or experiment" link="ENG20-00824388-a">
+		experimental:2, data-based:1, observational:1
+		<lit sense="2" literal="experimental"/>
+		<lit sense="1" literal="data-based"/>
+		<lit sense="1" literal="observational"/>
+	</ILR>
+	<BCS/>
+	<VERSION>3</VERSION>
+	<DOMAIN>factotum</DOMAIN>
+	<DEF>in an experimental fashion</DEF>
+	<SYNONYM>
+		<LITERAL sense="1" lnote="">experimentally</LITERAL>
+		<LITERAL sense="1" lnote="">by experimentation</LITERAL>
+		<LITERAL sense="1" lnote="">through an experiment</LITERAL>
+		<WORD>experimentally</WORD>
+		<WORD>by</WORD>
+		<WORD>experimentation</WORD>
+		<WORD>through</WORD>
+		<WORD>an</WORD>
+		<WORD>experiment</WORD>
+	</SYNONYM>
+	<VALENCY>
+		<FRAME>pokus</FRAME>
+	</VALENCY>
+	<POS>b</POS>
+	<NL>false</NL>
+	<SNOTE/>
+	<USAGE>this can be experimentally determined</USAGE>
+</SYNSET>
+
+<!-- Usages -->
+{id}, {content}
+<div id="{id}" class="row">
+	<label class="control-label col-sm reveal">
+		<a href="javascript:void(0)">{content}</a>
+	</label>
+	<div class="row col-sm">
+		<div class="col">
+			<input id="{id}-input" class="form-control" type="text" placeholder="Enter usage" value="{content}">
+		</div>
+		<div class="col-1">
+			<a id="{id}-delete" class="delete btn btn-danger" href="javascript:void(0)">
+				<img src="img/delete.png">
+			</a>
+		</div>
+	</div>
+</div>
+
+<div class="col-1"><a id="{id}-delete" class="delete btn btn-danger" href="javascript:void(0)"><img src="img/delete.png"></a></div>
+
+<!-- Synonyms -->
+{id}, {literal}, {sense}, {lnote}
+<div id="{id}" class="row">
+	<label class="control-label col-sm reveal">
+		<a href="javascript:void(0)">
+			<span>{literal}</span>
+			<span>{sense}</span>
+			<span>{lnote}</span>
+		</a>
+	</label>
+	<div class="row col-sm">
+		<div class="col">
+			<input id="{id}-literal-input" type="text" class="form-control" placeholder="Enter literal" value="{literal}">
+		</div>
+		<div class="col">
+			<input id="{id}-sense-input" type="text" class="form-control" placeholder="Enter sense" value="{sense}">
+		</div>
+		<div class="col">
+			<input id="{id}-lnote-input" type="text" class="form-control" placeholder="Enter lnote" value="{lnote}">
+		</div>
+		<div class="col-1">
+			<a id="{id}-delete" class="delete btn btn-danger" href="javascript:void(0)">
+				<img src="img/delete.png">
+			</a>
+		</div>
+	</div>
+</div>
+
+<!-- Relations -->
+{id}, {content}, {pwn}, {type-options}
+<div id="{id}" class="row">
+	<label class="control-label col-sm reveal">
+		<a href="javascript:void(0)">{content}</a>
+	</label>
+	<div class="row col-sm">
+		<div class="col">
+			<input id="{id}-pwn" type="text" class="form-control" placeholder="Enter relation" value="{pwn}">
+		</div>
+		<div class="col">
+			<select id="{id}-type" class="form-control" type="text">{type-options}</select>
+		</div>
+		<div class="col-1">
+			<a id="{id}-delete" class="delete btn btn-danger" href="javascript:void(0)">
+				<img src="img/delete.png">
+			</a>
+		</div>
+	</div>
+</div>
+
+<!-- Editations -->
+{id}, {name}, {user}, {date}
+<div id="edit-{id}" class="card">
+	<div class="card-header" role="tab" id="headingOne">
+		<h5 class="mb-0 row">
+			<a id="edit-{id}-accordion" class="col-10 row" data-toggle="collapse" data-parent="#accordion" href="#edit-collapse-{id}" aria-expanded="true" aria-controls="edit-collapse-{id}">
+				<div class="col-6">{name}</div>
+				<div class="col-3">{user}</div>
+				<div class="col-3">{date}</div>
+			</a>
+			<div class="col-2">
+				<a id="edit-{id}-approve" class="delete btn btn-primary" href="javascript:void(0)">
+					<img src="img/approve.png">
+				</a>
+				<a id="edit-{id}-cancel" class="delete btn btn-danger" href="javascript:void(0)">
+					<img src="img/cancel.png">
+				</a>
+				<a id="edit-{id}-undo" class="delete btn btn-primary" href="javascript:void(0)">
+					<img src="img/reload.png">
+				</a>
+				<a id="edit-{id}-refresh" class="delete btn btn-primary" href="javascript:void(0)">
+					<img src="img/reload.png">
+				</a>
+			</div>
+		</h5>
+	</div>
+	<div id="edit-collapse-{id}" class="collapse" role="tabpanel">
+		<div  id="edit-{id}-minoredits" class="card-block"></div>
+	</div>
+</div>
+
+<!-- Editations row -->
+{id}, {type}, {field}, {new}
+<div id="minoredit-{id}" class="row"><div class="col-3"><div class="badge badge-primary">{type}</div>{field}</div><div class="col-7 row"><div  id="loader-{id}" class="loader-collapse col-1"><div class="loader-small"></div></div><div class="col"><img id="info-{id}" class="info" src="img/info.png" style="display:none"><span id="minoredit-{id}-old" class="oldValue"></span> → <span id="minoredit-{id}-new" class="newValue">{new}</span></div></div><div class="col-2"><a id="minoredit-{id}-approve" class="approve btn btn-primary" href="javascript:void(0)"><img src="img/approve.png"></a><a id="minoredit-{id}-cancel" class="delete btn btn-danger" href="javascript:void(0)"><img src="img/cancel.png"></a><a id="minoredit-{id}-undo" class="delete btn btn-primary" href="javascript:void(0)"><img src="img/reload.png"></a><a id="minoredit-{id}-refresh" class="delete btn btn-primary" href="javascript:void(0)"><img src="img/reload.png"></a></div></div></div>
+
+<div id="edit-{id}" class="card"><div class="card-header" role="tab" id="headingOne"><h5 class="mb-0 row"><a id="edit-{id}-accordion" class="col-10 row" data-toggle="collapse" data-parent="#accordion" href="#edit-collapse-{id}" aria-expanded="true" aria-controls="edit-collapse-{id}"><div class="col-6">{name}</div><div class="col-3">{user}</div><div class="col-3">{date}</div></a><div class="col-2"><a id="edit-{id}-approve" class="delete btn btn-primary" href="javascript:void(0)"><img src="img/approve.png"></a><a id="edit-{id}-cancel" class="delete btn btn-danger" href="javascript:void(0)"><img src="img/cancel.png"></a><a id="edit-{id}-undo" class="delete btn btn-primary" href="javascript:void(0)"><img src="img/reload.png"></a><a id="edit-{id}-refresh" class="delete btn btn-primary" href="javascript:void(0)"><img src="img/reload.png"></a></div></h5></div><div id="edit-collapse-{id}" class="collapse" role="tabpanel"><div  id="edit-{id}-minoredits" class="card-block"></div></div></div>

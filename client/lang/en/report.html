@@ -1,0 +1,246 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="../../css/styles.css">
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-lg navbar-light fixed-top bg-light">
+      <button type="button" class="navbar-toggler  navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <a class="navbar-brand" href="#">DebDict Error Report</a>      
+      <div id="navbar" class="navbar-collapse collapse mr-auto">
+        <ul class="navbar-nav">
+          <li class="nav-item active">
+            <a class="nav-link" href="report.html">Report <span class="sr-only">(current)</span></a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="approval.html">Approval</a>
+          </li>
+        </ul>
+        <div style="width:100%">    
+          <ul class="navbar-nav justify-content-end">
+            <li id="language-dropdown" class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="language-dropdown-cur" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></a>
+              <div id="language-dropdown-langs" class="dropdown-menu" aria-labelledby="language-dropdown-cur"></div>
+            </li>
+            <li class="nav-item" style="padding: 0.5rem;">
+              Logged in as <span class="username">Jiri Kletecka</span>
+            </li>
+          </ul>
+        </div>
+      </div><!--/.nav-collapse -->
+    </nav>
+    <div id="content" class="container wrapper">
+      <div class="row justify-content-md-center">
+        <div id="errors" class="errors row col-12">
+          <div id="errors-not-found" class="alert alert-danger alert-dismissible fade show" role="alert" style="display: none;">
+            <button type="button" class="close" aria-label="Close" onclick="$('#errors-not-found').hide();">
+              <span aria-hidden="true">&times;</span>
+            </button>
+            <strong>Oh snap!</strong> Word with this pwn was not found.
+          </div>
+          <div id="errors-changes" class="alert alert-danger alert-dismissible fade show" role="alert" style="display: none;">
+            <button type="button" class="close" aria-label="Close" onclick="$('#errors-changes').hide();">
+              <span aria-hidden="true">&times;</span>
+            </button>
+            You can edit this dictionary. The changes will be saved to the dictionary directly.
+          </div>
+          <div id="errors-fill" class="alert alert-danger alert-dismissible fade show" role="alert" style="display: none;">
+            <button type="button" class="close" aria-label="Close" onclick="$('#errors-fill').hide();">
+              <span aria-hidden="true">&times;</span>
+            </button>
+            <strong>Error!</strong> Fill in the Princeton wordnet id and select dictionary.
+          </div>
+          <div id="errors-offline" class="alert alert-danger alert-dismissible fade show" role="alert" style="display: none;">
+            <button type="button" class="close" aria-label="Close" onclick="$('#errors-offline').hide();">
+              <span aria-hidden="true">&times;</span>
+            </button>
+            <strong>Bad connection!</strong> Can't reach the server.
+          </div>
+          <div id="errors-error" class="alert alert-danger alert-dismissible fade show" role="alert" style="display: none;">
+            <button type="button" class="close" aria-label="Close" onclick="$('#errors-error').hide();">
+              <span aria-hidden="true">&times;</span>
+            </button>
+            <strong>Oh snap!</strong> Change a few things up and try submitting again.
+          </div>
+          <div id="errors-no-edits" class="alert alert-info alert-dismissible fade show" role="alert" style="display: none;">
+            <button type="button" class="close" aria-label="Close" onclick="$('#errors-no-edits').hide();">
+              <span aria-hidden="true">&times;</span>
+            </button>
+            No editations has been made.
+          </div>
+        </div>
+        <div id="cards" class="row">
+          <div id="leftcards" class="col-4">
+            <form id="selectform" class="form-horizontal" style="display: none">
+              <div class="card">
+                <div class="card-header">
+                  <h3 id="selectform-card-title">Select Princeton Wordnet ID and dictionary</h3>
+                </div>
+                <div class="card-block">
+                  <label class="control-label" for="dictionary">Dictionary:</label>
+                  <div id="dictionary" class="form-group row">
+                      <select id="dictionaries-select" class="form-control" type="text"></select>
+                  </div>
+                  <label class="control-label" for="pwn-input">Princeton Wordnet ID:</label>
+                  <div id="pwn" class="form-group row">
+                    <input id="pwn-input" type="text" class="form-control" placeholder="Enter pwn">
+                  </div>
+                </div>
+                <div class="card-footer text-muted text-right">
+                  <button id="btn-select" class="btn btn-primary" type="submit">Select</button>
+                </div>
+              </div>
+            </form>
+            <form id="userform" class="form-horizontal" style="display: none">
+              <div class="card">
+                <div class="card-header">
+                  <h3 id="selectform-card-title">Logged in as <span class="username"></span></h3>
+                </div>
+                <div class="card-block">
+                  <label class="control-label" for="email">Email:</label>
+                  <div id="email" class="form-group row">
+                      <input id="email-input" type="text" class="form-control" placeholder="Enter pwn">
+                  </div>
+                </div>
+              </div>
+            </form>
+          </div>
+          <div  id="loader" class="col">
+            <div class="loader"></div>
+          </div>
+          <div  id="editform-start" class="col" style="display: none">
+            <div class="card">
+              <div class="card-header">
+                <h3 id="selectform-card-title">Please select dictionary and word</h3>
+              </div>
+              <div class="card-block">
+              </div>  
+            </div>
+          </div>
+          <div  id="editform-noresults" class="col" style="display: none">
+            <div class="card">
+              <div class="card-header">
+                <h3 id="selectform-card-title">No word was found, please select another one</h3>
+              </div>
+              <div class="card-block">
+              </div>  
+            </div>
+          </div>
+          <form id="editform" class="form-horizontal col" style="display: none">
+            <div class="card">
+              <div class="card-header">
+                <h3 id="editform-card-title"></h3>
+              </div>
+              <div class="card-block">
+            
+                <!--Basic info-->
+                <!--Domain-->
+                <div id="definition" class="form-group row">
+                  <label class="control-label col-2" for="definition-input">Definition:</label>
+                  <div class="col">
+                    <a class="reveal" href="javascript:void(0)"></a>
+                    <input id="definition-input" type="text" class="form-control" placeholder="Enter definition" style="display: none;">
+                  </div>
+                </div>
+
+                <div id="domain" class="form-group row">
+                  <label class="control-label col-2" for="domain-input">Domain:</label>
+                  <div class="col">
+                    <a class="reveal" href="javascript:void(0)"></a>
+                    <input id="domain-input" type="text" class="form-control" placeholder="Enter domain" style="display: none;">
+                  </div>
+                </div>
+            
+                <!--Sumo-->
+                <div id="sumo" class="form-group row">
+                  <label class="control-label col-2" for="sumo-input">Sumo:</label>
+                  <div class="col">
+                    <a class="reveal" href="javascript:void(0)"></a>
+                    <input id="sumo-input" type="text" class="form-control" placeholder="Enter sumo" style="display: none;">
+                  </div>
+                </div>
+              
+                <!--Sumo type-->
+                <div id="sumo-type" class="form-group row">
+                  <label class="control-label col-2" for="sumo-type-input">Sumo type:</label>
+                  <div class="col">
+                    <a class="reveal" href="javascript:void(0)"></a>
+                    <input id="sumo-type-input" type="text" class="form-control" placeholder="Enter sumo type" style="display: none;">
+                  </div>
+                </div>
+            
+                <hr/>
+            
+                <!--Definition-->
+              
+            
+                <!--Usage-->              
+                <div id="usages" class="form-group col">
+                  <div id="usage-header" class="control-label header row">
+                    <h3>Usages</h3>
+                    <div id="usage-add" class="row add">
+                      <label class="control-label col-sm"><a class="btn btn-primary" href="javascript:void(0)">Add</a></label>
+                    </div>
+                  </div>
+                  
+                </div>
+            
+                <hr/>
+
+                <!--Synonyms-->
+                <div id="synonyms" class="form-group col">
+                  <div id="synonym-header" class="control-label header row">
+                    <h3>Synonyms</h3>
+                    <div id="synonym-add" class="row add">
+                      <label class="control-label col-sm"><a class="btn btn-primary" href="javascript:void(0)">Add</a></label>
+                    </div>      
+                  </div>
+                </div>
+
+                <hr/>
+            
+                <!--Relations-->
+                <div id="relations" class="form-group col">
+                  <div id="relation-header" class="control-label header row">
+                    <h3>Relations</h3>
+                    <div id="relation-add" class="row add">
+                      <label class="control-label col-sm"><a class="btn btn-primary" href="javascript:void(0)">Add</a></label>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+          
+              <!--Footer buttons-->
+              <div class="card-footer text-muted text-right">
+                <a id="btn-cancel" class="btn btn-default" href="javascript:void(0)">Cancel</a>
+                <button id="btn-submit" type="submit" class="btn btn-primary">Save</button>
+              </div>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+<div>Icons made by <a href="https://www.flaticon.com/authors/eleonor-wang" title="Eleonor Wang">Eleonor Wang</a> from <a href="https://www.flaticon.com/" title="Flaticon">www.flaticon.com</a> is licensed by <a href="http://creativecommons.org/licenses/by/3.0/" title="Creative Commons BY 3.0" target="_blank">CC 3.0 BY</a></div>
+    <!-- jQuery first, then Tether, then Bootstrap JS. -->
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
+    <script src="locale.js"></script>
+    <script src="../../js/converters.js"></script>
+    <script src="../../js/locales.js"></script>
+    <script src="../../js/common.js"></script>
+    <script src="../../js/report.js"></script>
+    <script src="../../js/jquery.xpath.min.js"></script>
+  </body>
+</html>

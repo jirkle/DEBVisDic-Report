@@ -1,0 +1,36 @@
+.badge, .btn {
+	height: 1.5rem;
+	padding: 0.2rem 0.5rem;
+	font-size: 0.9rem;
+
+}
+
+.btn img {
+	max-height: 0.8rem;
+	padding-bottom: 0.2rem;
+}
+
+.loader-small {
+	border: 4px solid #f3f3f3;
+    border-top-width: 4px;
+    border-top-style: solid;
+    border-top-color: rgb(243, 243, 243);
+	border-top: 4px solid #3498db;
+	border-radius: 50%;
+	width: 20px;
+	height: 20px;
+	animation: spin 1s linear infinite;
+}
+
+.badge {
+	margin-right: 10px; 
+}
+
+.approve {
+	margin-right: 10px; 
+}
+
+.info {
+	height: 1.5rem;
+    margin-right: 1rem;
+}

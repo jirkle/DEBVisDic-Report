@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/css/bootstrap.min.css" integrity="sha384-PsH8R72JQ3SOdhVi3uxftmaW6Vc51MKb0q5P2rRUpPvrszuE4W1povHYgTpBfshb" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="../../css/styles.css">
+    <link rel="stylesheet" href="../../css/approval.css">
+  </head>
+  <body>
+    <nav class="navbar navbar-expand-lg navbar-light fixed-top bg-light">
+      <button type="button" class="navbar-toggler  navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <a class="navbar-brand" href="#">DebDict hlášení chyb</a>      
+      <div id="navbar" class="navbar-collapse collapse mr-auto">
+        <ul class="navbar-nav">
+          <li class="nav-item">
+            <a class="nav-link" href="report.html">Nahlásit</a>
+          </li>
+          <li class="nav-item active">
+            <a class="nav-link" href="approval.html">Schválit <span class="sr-only">(současné)</span></a>
+          </li>
+        </ul>
+        <div style="width:100%">    
+          <ul class="navbar-nav justify-content-end">
+            <li id="language-dropdown" class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="language-dropdown-cur" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></a>
+              <div id="language-dropdown-langs" class="dropdown-menu" aria-labelledby="language-dropdown-cur"></div>
+            </li>
+            <li class="nav-item" style="padding: 0.5rem;">
+              Přihlášen jako <span class="username">Jiri Kletecka</span>
+            </li>
+          </ul>
+        </div>
+      </div><!--/.nav-collapse -->
+    </nav>
+    <div id="content" class="container wrapper">
+      <div class="row justify-content-md-center">
+        <div id="errors" class="errors row col-12">
+          <div id="errors-accepted" class="alert alert-success alert-dismissible fade show" role="alert" style="display: none;">
+            <button type="button" class="close" aria-label="Close" onclick="$('#errors-errors-accepted').hide();">
+              <span aria-hidden="true">&times;</span>
+            </button>
+            <strong>Úspěch!</strong> Synset byl aktualizován.
+          </div>
+          <div id="errors-rejected" class="alert alert-warning alert-dismissible fade show" role="alert" style="display: none;">
+            <button type="button" class="close" aria-label="Close" onclick="$('#errors-rejected').hide();">
+              <span aria-hidden="true">&times;</span>
+            </button>
+            <strong>Úspěch!</strong> Úprava byla zamítnuta.
+          </div>
+          <div id="errors-undoed" class="alert alert-danger alert-dismissible fade show" role="alert" style="display: none;">
+            <button type="button" class="close" aria-label="Close" onclick="$('#errors-undoed').hide();">
+              <span aria-hidden="true">&times;</span>
+            </button>
+            <strong>Úspěch!</strong> Schválená úprava byla navrácena do původního stavu.
+          </div>
+          <div id="errors-offline" class="alert alert-danger alert-dismissible fade show" role="alert" style="display: none;">
+            <button type="button" class="close" aria-label="Close" onclick="$('#errors-offline').hide();">
+              <span aria-hidden="true">&times;</span>
+            </button>
+            <strong>Problém s připojením!</strong> Nelze se připojit na server.
+          </div>
+          <div id="errors-error" class="alert alert-danger alert-dismissible fade show" role="alert" style="display: none;">
+            <button type="button" class="close" aria-label="Close" onclick="$('#errors-error').hide();">
+              <span aria-hidden="true">&times;</span>
+            </button>
+            <strong>Kruciš!</strong> Zkuste to prosím za chvíli.
+          </div>
+        </div>
+        <div id="cards" class="row">
+          <div id="leftcards" class="col-3">
+            <form id="selectform" class="form-horizontal">
+              <div class="card">
+                <div class="card-header">
+                  <h3 id="selectform-card-title">Filtr úprav</h3>
+                </div>
+                <div class="card-block">
+                  <label class="control-label" for="dictionary">Slovník:</label>
+                  <div id="dictionary" class="form-group row">
+                      <select id="dictionaries-select" class="form-control" type="text"></select>
+                  </div>
+                  <label class="control-label" for="edit-status">Stav úpravy:</label>
+                  <div id="edit-status" class="form-group row">
+                      <select id="edit-status-select" class="form-control" type="text"><option value='0' selected>Ke schválení</option><option value='1'>Schváleno</option><option value='2'>Odmítnuto</option></select>
+                  </div>
+                  <label class="control-label" for="edit-type">Typ úpravy:</label>
+                  <div id="edit-type" class="form-group row">
+                      <select id="edit-type-select" class="form-control" type="text"><option value='' selected>Všechny</option><option value='0'>Přidání</option><option value='1'>Úprava</option><option value='2'>Odstranění</option></select>
+                  </div>
+                  <label class="control-label" for="edit-field">Upravené položky:</label>
+                  <div id="edit-field" class="form-group row">
+                      <select id="edit-field-select" class="form-control" type="text"><option value='' selected>Všechny</option><option value='definition'>Definice</option><option value='domain'>Doména</option><option value='sumo'>Sumo</option><option value='sumo type'>Typ sumo</option><option value='usage'>Použití</option><option value='synonym'>Synonyma</option><option value='relation'>Vztahy</option></select>
+                  </div>
+                  <label class="control-label" for="pwn-input">ID dle Princeton wordnet:</label>
+                  <div id="pwn" class="form-group row">
+                    <input id="pwn-input" type="text" class="form-control" placeholder="Enter pwn">
+                  </div>
+                </div>
+                <div class="card-footer text-muted text-right">
+                  <button id="btn-select" class="btn btn-primary" type="submit">Vybrat</button>
+                </div>
+              </div>
+            </form>
+          </div>
+          <div  id="loader" class="col">
+            <div class="loader"></div>
+          </div>
+          <div  id="editations-noresults" class="col" style="display: none">
+            <div class="card">
+              <div class="card-header">
+                <h3 id="selectform-card-title">Bohužel, žádné úpravy nevyhovují zadaným kritériím.</h3>
+              </div>
+              <div class="card-block">
+              </div>
+            </div>
+          </div>
+
+          <div id="editations" class="container col" role="tablist" aria-multiselectable="true" style="display: none">              
+          </div>
+      </div>
+    </div>
+
+    <!-- jQuery first, then Tether, then Bootstrap JS. -->
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js" integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4=" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tether/1.4.0/js/tether.min.js" integrity="sha384-DztdAPBWPRXSA/3eYEEUWrWCy7G5KFbe8fFjk5JAIxUYHKkDx6Qin1DkWx51bBrb" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0-beta.2/js/bootstrap.min.js" integrity="sha384-alpBpkh1PFOepccYVYDB4do5UnbKysX5WZXm3XxPqe5iKTfUKjNkCk9SaVuEZflJ" crossorigin="anonymous"></script>
+    <script src="locale.js"></script>
+    <script src="../../js/converters.js"></script>
+    <script src="../../js/locales.js"></script>
+    <script src="../../js/common.js"></script>
+    <script src="../../js/approval.js"></script>
+    <script src="../../js/jquery.xpath.min.js"></script>
+  </body>
+</html>

@@ -1,0 +1,95 @@
+.navbar {
+	background-color: #f7f7f7;
+}
+.lang-icon {
+	width: 24px;
+	margin: 0px 8px;
+	box-shadow: 1px 1px 5px rgba(128, 128, 128, 0.15);
+}
+.loader {
+    border: 16px solid #f3f3f3; /* Light grey */
+    border-top: 16px solid #3498db; /* Blue */
+    border-radius: 50%;
+    width: 120px;
+    height: 120px;
+    animation: spin 1s linear infinite;
+    margin-top: 10rem;
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+
+.wrapper{
+	margin-top: 3.375rem;
+}
+
+#errors {
+	width: 100%;
+}
+
+.alert {
+	width: 100%;
+}
+
+#content {
+	padding-top: 2rem;
+	padding-bottom: 2rem;
+}
+
+#cards {
+	width: 100%;
+}
+
+#userform {
+	margin-top: 15px;
+}
+
+#editform {
+	width: 100%;
+}
+
+#loader {
+	text-align: -webkit-center;
+}
+
+.card-header h3 {
+	margin: 1rem;
+}
+
+.card-block {
+	padding: 2.5rem;
+}
+
+label {
+	font-weight: 500;
+}
+
+.header {
+	margin-bottom: 1.5rem;
+	
+	clear:both;
+}
+.header h3 {
+	float:left;
+}
+
+.add {
+	height: 1rem;
+}
+
+.form-group .btn {
+	max-height: 2rem;
+    padding: 0.2rem 0.5rem;
+    font-size: 0.9rem;
+
+}
+
+.delete img {
+	height: 1.25rem;
+}
+
+.stacked-input {
+	margin-bottom: 0.7rem;
+}
