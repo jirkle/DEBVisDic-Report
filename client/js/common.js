@@ -29,6 +29,7 @@ function isJson(str) {
 }
 
 function setSearchAutocomplete(input, dict) {
+	$(input).addClass("input-loader");
 	input.autocomplete({
     	html: true,
     	source: function( request, response ) {
@@ -43,6 +44,12 @@ function setSearchAutocomplete(input, dict) {
     	},
     	change: function( event, ui ) {
     		$(this).data(ui.item);
+    	},
+    	search: function( event, ui ) {
+    		$(this).addClass("input-loader-loading");
+    	},
+    	response: function( event, ui ) {
+    		$(this).removeClass("input-loader-loading");
     	},
     	minLength: 2
 	});
