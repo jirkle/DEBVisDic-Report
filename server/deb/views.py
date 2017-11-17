@@ -10,7 +10,7 @@ import json
 
 
 def index(request):
-    return HttpResponse("Hello, world. You're at the polls index.")
+    return HttpResponse("Hello, DEBVisDic Report here!")
 
 
 def create_edit(request):
@@ -67,12 +67,12 @@ def create_edit(request):
 
 def get_all_edits(request):
     if request.method == 'GET':
-        pwn_id = request.GET.get('pwn_id', '')
-        dictionary = request.GET.get('dictionary', '')
+        pwn_id = str(request.GET.get('pwn_id', ''))
+        dictionary = str(request.GET.get('dictionary', ''))
 
-        field = request.GET.get('field', '')
-        type_deb = request.GET.get('type', '')
-        edit_status = request.GET.get('edit_status', '')
+        field = str(request.GET.get('field', ''))
+        type_deb = str(request.GET.get('type', ''))
+        edit_status = str(request.GET.get('edit_status', ''))
 
         pwn_id = pwn_id.replace("\"", "")
         dictionary = dictionary.replace("\"", "")
@@ -92,6 +92,7 @@ def get_all_edits(request):
         if edit_status is not '':
             editations = editations.filter(edit_status__exact=edit_status)
         metas = set()
+
         for edit in editations:
             metas.add(edit.edit_meta)
         results = []
