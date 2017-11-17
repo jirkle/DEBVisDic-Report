@@ -80,7 +80,22 @@ function init() {
 				$("#dictionaries-select").change();
 			}
 
-
+			$("#definition a").click(function() {
+				reloadAlert = true;
+				hideAndShow($("#definition a"), $("#definition input"));
+			});
+			$("#domain a").click(function() {
+				reloadAlert = true;
+				hideAndShow($("#domain a"), $("#domain input"));
+			});
+			$("#sumo a").click(function() {
+				reloadAlert = true;
+				hideAndShow($("#sumo a"), $("#sumo input"));
+			});
+			$("#sumo-type a").click(function() {
+				reloadAlert = true;
+				hideAndShow($("#sumo-type a"), $("#sumo-type input"));
+			});
 			$( "#usage-add a" ).click(function() {
     			reloadAlert = true;
 				insertUsage($("#usages"), "", false);
@@ -195,10 +210,7 @@ function parseXML() {
 		$("#definition a").addClass("btn btn-primary");
 		$("#definition input").val("");
 	}
-	$("#definition a").click(function() {
-		reloadAlert = true;
-		hideAndShow($("#definition a"), $("#definition input"));
-	});
+	$("#definition input").attr("origvalue", $("#definition input").val());
 
 	//Domain
 	hideAndShow($("#domain input"), $("#domain a"));
@@ -210,10 +222,7 @@ function parseXML() {
 		$("#domain a").addClass("btn btn-primary");
 		$("#domain input").val("");
 	}
-	$("#domain a").click(function() {
-		reloadAlert = true;
-		hideAndShow($("#domain a"), $("#domain input"));
-	});
+	$("#domain input").attr("origvalue", $("#domain input").val());
 
 	//Sumo + type
 	hideAndShow($("#sumo input"), $("#sumo a"));
@@ -225,10 +234,8 @@ function parseXML() {
 		$("#sumo a").addClass("btn btn-primary");
 		$("#sumo input").val("");
 	}
-	$("#sumo a").click(function() {
-		reloadAlert = true;
-		hideAndShow($("#sumo a"), $("#sumo input"));
-	});
+	$("#sumo input").attr("origvalue", $("#sumo input").val());
+
 
 	hideAndShow($("#sumo-type input"), $("#sumo-type a"));
 	if(synset.sumoType) {
@@ -239,11 +246,8 @@ function parseXML() {
 		$("#sumo-type a").addClass("btn btn-primary");
 		$("#sumo-type input").val("");
 	}
+	$("#sumo-type input").attr("origvalue", $("#sumo-type input").val());
 	
-	$("#sumo-type a").click(function() {
-		reloadAlert = true;
-		hideAndShow($("#sumo-type a"), $("#sumo-type input"));
-	});
 	
 	//Usages
 	for (i = 0; i < synset.usages.length; i++) {
@@ -285,6 +289,7 @@ function insertUsage(node, content, preview) {
 		reveal.hide();
 	}
 
+	inserted.find("input:text").change(inputChangeHandler);
 	registerDeleteHandler(inserted.find(".delete"));
 }
 
@@ -308,6 +313,7 @@ function insertSynonym(node, literal, sense, lnote, preview) {
 		reveal.hide();
 	}
 
+	inserted.find("input:text").change(inputChangeHandler);
 	registerDeleteHandler(inserted.find(".delete"));
 }
 
@@ -338,6 +344,8 @@ function insertRelation(node, relation, preview) {
 	} else {
 		reveal.hide();
 	}
+	
+	inserted.find("input:text").change(inputChangeHandler);
 	setSearchAutocomplete($("#" + id + "-pwn"), dicts[dictionary].code);
 	registerDeleteHandler(inserted.find(".delete"));
 }
@@ -443,6 +451,7 @@ function reset() {
 	$("#domain a").removeClass("btn btn-primary");
 	$("#sumo a").removeClass("btn btn-primary");
 	$("#sumo-type a").removeClass("btn btn-primary");
+	$("#editform input:text").off("change");
 	//$("#editform-card-title").html("");
 	usagesCount = 0;
 	$("#usages").children().each(function(i) {
@@ -493,6 +502,14 @@ function registerDeleteHandler(node) {
 			$("#" + parentId).hide();
 		}		
 	});
+}
+
+function inputChangeHandler() {
+	if($(this).attr("origvalue") == this.value) {
+		$(this).removeClass("input-edited");
+	} else {
+		$(this).addClass("input-edited");
+	}
 }
 
 function closeWindow() {
