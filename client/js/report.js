@@ -4,7 +4,6 @@ var user;
 
 var synsetXML; //Synset XML
 var synset;
-var reloadAlert = false;
 
 var cardTitleHTML = '{content} <span class="badge badge-default">{pos}</span></h3>'
 var usagesHTML = '<div id="{id}" class="row stacked-input"><div class="control-label col reveal"><a href="javascript:void(0)">{content}</a></div><div class="row col"><div class="col"><input id="{id}-input" class="form-control" type="text" placeholder="Enter usage" value="{content}"></div><div class="col-1"><a id="{id}-delete" class="delete btn btn-danger" href="javascript:void(0)"><img src="../../img/delete.png"></a></div></div></div>';
@@ -79,50 +78,50 @@ function init() {
 				$("#dictionaries-select").val(dictionary);
 				$("#dictionaries-select").change();
 			}
-
+			
+			$("#editform input:text").change(inputChangeHandler);
+			
 			$("#definition a").click(function() {
-				reloadAlert = true;
 				hideAndShow($("#definition a"), $("#definition input"));
 			});
 			$("#domain a").click(function() {
-				reloadAlert = true;
 				hideAndShow($("#domain a"), $("#domain input"));
 			});
 			$("#sumo a").click(function() {
-				reloadAlert = true;
 				hideAndShow($("#sumo a"), $("#sumo input"));
 			});
 			$("#sumo-type a").click(function() {
-				reloadAlert = true;
 				hideAndShow($("#sumo-type a"), $("#sumo-type input"));
 			});
 			$( "#usage-add a" ).click(function() {
-    			reloadAlert = true;
 				insertUsage($("#usages"), "", false);
 			});
 			$( "#synonym-add a" ).click(function() {
-				reloadAlert = true;
 				insertSynonym($("#synonyms"), "", "", "", false);
 			});
 			$( "#relation-add a" ).click(function() {
-				reloadAlert = true;
 				insertRelation($("#relations"), {"pwn_id": "", "label": "", "type": "", "content": ""}, false);
 			});
 
 			$("#btn-cancel").click(function() {
-				changeRightCard($("#editform-start"));
-				reloadAlert = false;
+				if (revertEdits()) {
+					reset();
+					changeRightCard($("#editform-start"));
+				}
 			});
 
 			$("#btn-submit").click(function(e) {
 				e.preventDefault();
 				saveEdits();
+				reset();
 				return true;
 			});
 
 			$("#btn-select").click(function(e) {
 				e.preventDefault();
-				onPWNchange();
+				if (revertEdits()) {
+					onPWNchange();
+				}
 			});
 			
 			changeRightCard($("#editform-start"));
@@ -281,7 +280,6 @@ function insertUsage(node, content, preview) {
 	var reveal = inserted.find(".reveal");
 	if(preview) {
 		reveal.click(function() {
-			reloadAlert = true;
 			hideAndShow($(this), $(this).next());
 		});
 		reveal.next().hide();
@@ -289,7 +287,11 @@ function insertUsage(node, content, preview) {
 		reveal.hide();
 	}
 
-	inserted.find("input:text").change(inputChangeHandler);
+	inserted.find("input:text").each(function(i) {
+		input = $(this);
+		input.change(inputChangeHandler);
+		input.attr("origvalue", input.val());
+	});
 	registerDeleteHandler(inserted.find(".delete"));
 }
 
@@ -305,7 +307,6 @@ function insertSynonym(node, literal, sense, lnote, preview) {
 	var reveal = inserted.find(".reveal");
 	if(preview) {
 		reveal.click(function() {
-			reloadAlert = true;
 			hideAndShow($(this), $(this).next());
 		});
 		reveal.next().hide();
@@ -313,7 +314,11 @@ function insertSynonym(node, literal, sense, lnote, preview) {
 		reveal.hide();
 	}
 
-	inserted.find("input:text").change(inputChangeHandler);
+	inserted.find("input:text").each(function(i) {
+		input = $(this);
+		input.change(inputChangeHandler);
+		input.attr("origvalue", input.val());
+	});
 	registerDeleteHandler(inserted.find(".delete"));
 }
 
@@ -337,15 +342,18 @@ function insertRelation(node, relation, preview) {
 	var reveal = inserted.find(".reveal");
 	if(preview) {
 		reveal.click(function() {
-			reloadAlert = true;
 			hideAndShow($(this), $(this).next());
 		});
 		reveal.next().hide();
 	} else {
 		reveal.hide();
 	}
-	
-	inserted.find("input:text").change(inputChangeHandler);
+
+	inserted.find("input:text").each(function(i) {
+		input = $(this);
+		input.change(inputChangeHandler);
+		input.attr("origvalue", input.val());
+	});
 	setSearchAutocomplete($("#" + id + "-pwn"), dicts[dictionary].code);
 	registerDeleteHandler(inserted.find(".delete"));
 }
@@ -421,7 +429,6 @@ function saveEdits() {
     		).done(function(msg) {
     			alert("Synset reported!");
     			changeRightCard($("#editform-start"));
-    			reloadAlert = false;
     		}).fail(function(msg) {
     			alert(localize("report-server-error"));
     		});
@@ -451,7 +458,7 @@ function reset() {
 	$("#domain a").removeClass("btn btn-primary");
 	$("#sumo a").removeClass("btn btn-primary");
 	$("#sumo-type a").removeClass("btn btn-primary");
-	$("#editform input:text").off("change");
+	$(".input-edited").removeClass("input-edited");
 	//$("#editform-card-title").html("");
 	usagesCount = 0;
 	$("#usages").children().each(function(i) {
@@ -519,9 +526,20 @@ function closeWindow() {
 }
 
 window.onbeforeunload = function () {
-    if (reloadAlert) {
+    if ($(".input-edited").length > 0) {
         return localize("cancel-question");
     } else {
         return null;
+    }
+}
+
+function revertEdits() {
+	if ($(".input-edited").length > 0) {
+        if(confirm(localize("cancel-question"))) {
+        	return true;
+        }
+        return false;
+    } else {
+    	return true;
     }
 }
