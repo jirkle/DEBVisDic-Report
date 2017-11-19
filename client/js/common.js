@@ -28,6 +28,32 @@ function isJson(str) {
     return true;
 }
 
+
+function getBlankSynset() {
+	var obj = {
+		'SYNSET': {
+			'ID': {"$": ""},
+			'ILI': {"$": ""},
+			'DOMAIN': {"$": ""},
+			'SUMO': {"$": "", "@type": ""},
+			'POS': {"$": ""},
+			'NL': {},
+			'SYNONYM': {
+				'LITERAL': [],
+				'WORD': []
+			},
+			'DEF': {"$": ""},
+			'USAGE': [],
+			'ILR': [],
+			'SNOTE': [],
+			'VALENCY': [],
+			'STAMP': {},
+			'BCS': {}
+        }
+    };
+    return obj;
+}
+
 function setSearchAutocomplete(input, dict) {
 	$(input).addClass("input-loader");
 	input.autocomplete({
@@ -36,14 +62,15 @@ function setSearchAutocomplete(input, dict) {
     		var items = [];
     		$.getJSON( serverAddress + "/" + encodeURIComponent(dict), { action: "queryList", word: this.term }, function( data ) {
         		$.each( data, function( key, val ) {
-    	      		var item = { label: val.value + ":" + val.label, value: val.value + ":" + val.label, pwn_id: val.value, content: val.label};
+    	      		var item = {"$": val.label, "@link": val.value, "value": val.value + ": " + val.label, "label": val.value + ": " + val.label};
         	  		items.push(item);
 	        	});
     	    	response(items);
       		})
     	},
-    	change: function( event, ui ) {
-    		$(this).data(ui.item);
+    	select: function( event, ui ) {
+    		data = {"$": ui.item.$, "@link": ui.item["@link"]}
+    		$(this).data(data);
     	},
     	search: function( event, ui ) {
     		$(this).addClass("input-loader-loading");
@@ -53,6 +80,37 @@ function setSearchAutocomplete(input, dict) {
     	},
     	minLength: 2
 	});
+}
+
+function setRelationOptions(select, options, selected) {
+	selectHTML = "";
+	for (i = 0; i < options.length; i++) {
+		opt = options[i];
+		if(opt == "") {
+			if(selected != "") {
+				selectHTML += "<option value=''>" + localize("relation-selectbox-remove") + "</option>";
+			} else {
+				selectHTML += "<option value='' disabled selected>" + localize("relation-selectbox-do-selection") + "</option>";
+			}
+		} else {
+			if(opt == selected) {
+				selectHTML += "<option value='" + opt + "' selected>" + opt + "</option>";
+			} else {
+				selectHTML += "<option value='" + opt + "'>" + opt + "</option>";
+			}
+		}
+	}
+	select.html(selectHTML);
+	select.attr("origvalue", selected);
+	select.change(inputChangeHandler);
+}
+
+function inputChangeHandler() {
+	if($(this).attr("origvalue") == $(this).val()) {
+		$(this).removeClass("input-edited");
+	} else {
+		$(this).addClass("input-edited");
+	}
 }
 
 function applyActions(xml, actions) {
@@ -339,106 +397,6 @@ function updateSynset(synset, actions, meta, newState) {
 		}
 	});
 	
-}
-
-function editNotFoundDialog(question, domElem, action, changes) {
-    var defer = $.Deferred();
-    btns = {};
-    btns[localize("not-found-dialog-button-add")] = function() {
-		addElement(domElem, action, changes);
-		$(this).dialog("close");
-		defer.resolve("add");
-	}
-	btns[localize("not-found-dialog-button-nothing")] = function() {
-		$(this).dialog("close");
-		defer.resolve("nothing");
-	}
-	btns[localize("not-found-dialog-button-discard")] = function() {
-		$.post(
-			reportServerAddress + "/mark_deleted/",
-			JSON.stringify({id: action.id})
-		).done(function () {
-			removeMinorEdit(action.id);
-			defer.resolve("discard");
-		});
-		//TODO fail
-		$(this).dialog("close");
-	}
-
-    $('<div>' + question + '</div>')
-        .dialog({
-            autoOpen: true,
-            modal: true,
-            title: localize("not-found-dialog-title"),
-            buttons: btns,
-            close: function () {
-                $(this).remove();
-            }
-        });
-    return defer.promise();
-}
-
-function removeNotFoundDialog(question, domElem, action, changes) {
-    var defer = $.Deferred();
-    btns = {};
-	btns[localize("not-found-dialog-button-nothing")] = function() {
-		$(this).dialog("close");
-		defer.resolve("nothing");
-	}
-	btns[localize("not-found-dialog-button-discard")] = function() {
-		$.post(
-			reportServerAddress + "/mark_deleted/",
-			JSON.stringify({id: action.id})
-		).done(function () {
-			removeMinorEdit(action.id);
-			defer.resolve("discard");
-		});
-		//TODO fail
-		$(this).dialog("close");
-	}
-    $('<div>' + question + '</div>')
-        .dialog({
-            autoOpen: true,
-            modal: true,
-            title: localize("not-found-dialog-title"),
-            buttons: btns,
-            close: function () {
-                $(this).remove();
-            }
-        });
-    return defer.promise();
-}
-
-function removeMinorEdit(id) {
-	minoredit = $("#minoredit-" + id);
-	editData = findEditParent(minoredit).data();
-
-	editData = $.map(editData, function(value, index) {
-    	return [value];
-	});
-	meta = editData.shift(); //Remove meta
-	editData.splice(editData.length - 1, 1); //Remove prototype function
-
-	editData = editData.filter(function(action) { return action.id != id; });
-	newData = [];
-	newData.push(meta);
-	newData = newData.concat(editData);
-	findEditParent(minoredit).removeData();
-	findEditParent(minoredit).data(newData);
-	$("#minoredit-" + id).remove();
-	if($("#edit-" + meta.id + "-minoredits").children().length == 0) {
-		$("#edit-" + meta.id).remove();
-	}
-}
-
-function findMinorEditParent(node) {
-	parents = node.parents();
-	return parents.filter(".minoredit");
-}
-
-function findEditParent(node) {
-	parents = node.parents();
-	return parents.filter(".edit");
 }
 
 function initLocalesDropdown(page) {

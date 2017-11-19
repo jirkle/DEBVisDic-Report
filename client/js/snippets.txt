@@ -93,7 +93,7 @@
 			<input id="{id}-pwn" type="text" class="form-control" placeholder="Enter relation" value="{pwn}">
 		</div>
 		<div class="col">
-			<select id="{id}-type" class="form-control" type="text">{type-options}</select>
+			<select id="{id}-type" class="form-control" type="text"></select>
 		</div>
 		<div class="col-1">
 			<a id="{id}-delete" class="delete btn btn-danger" href="javascript:void(0)">

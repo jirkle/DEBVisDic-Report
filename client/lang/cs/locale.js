@@ -23,6 +23,7 @@ loc = {
 	"relation-selectbox-remove": "smazat typ",
 	"delete-question": "Opravdu chcete tuto položku smazat?",
 	"cancel-question": "Změny nebudou uloženy! Opravdu chcete pokračovat?",
+	"report-server-ok": "Synset byl reportován!",
 
 	//Approval
 	//Action results

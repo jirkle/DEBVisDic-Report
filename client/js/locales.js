@@ -35,6 +35,7 @@ defaultLoc = {
 	"relation-selectbox-remove": "remove type",
 	"delete-question": "Do you really want to delete?",
 	"cancel-question": "Changes won't be saved! Do you want to continue?",
+	"report-server-ok": "Synset saved!",
 
 	//Approval
 	//Action results

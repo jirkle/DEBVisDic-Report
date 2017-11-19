@@ -396,3 +396,103 @@ function registerRefreshHandler(node) {
 
 	});
 }
+
+function editNotFoundDialog(question, domElem, action, changes) {
+    var defer = $.Deferred();
+    btns = {};
+    btns[localize("not-found-dialog-button-add")] = function() {
+		addElement(domElem, action, changes);
+		$(this).dialog("close");
+		defer.resolve("add");
+	}
+	btns[localize("not-found-dialog-button-nothing")] = function() {
+		$(this).dialog("close");
+		defer.resolve("nothing");
+	}
+	btns[localize("not-found-dialog-button-discard")] = function() {
+		$.post(
+			reportServerAddress + "/mark_deleted/",
+			JSON.stringify({id: action.id})
+		).done(function () {
+			removeMinorEdit(action.id);
+			defer.resolve("discard");
+		});
+		//TODO fail
+		$(this).dialog("close");
+	}
+
+    $('<div>' + question + '</div>')
+        .dialog({
+            autoOpen: true,
+            modal: true,
+            title: localize("not-found-dialog-title"),
+            buttons: btns,
+            close: function () {
+                $(this).remove();
+            }
+        });
+    return defer.promise();
+}
+
+function removeNotFoundDialog(question, domElem, action, changes) {
+    var defer = $.Deferred();
+    btns = {};
+	btns[localize("not-found-dialog-button-nothing")] = function() {
+		$(this).dialog("close");
+		defer.resolve("nothing");
+	}
+	btns[localize("not-found-dialog-button-discard")] = function() {
+		$.post(
+			reportServerAddress + "/mark_deleted/",
+			JSON.stringify({id: action.id})
+		).done(function () {
+			removeMinorEdit(action.id);
+			defer.resolve("discard");
+		});
+		//TODO fail
+		$(this).dialog("close");
+	}
+    $('<div>' + question + '</div>')
+        .dialog({
+            autoOpen: true,
+            modal: true,
+            title: localize("not-found-dialog-title"),
+            buttons: btns,
+            close: function () {
+                $(this).remove();
+            }
+        });
+    return defer.promise();
+}
+
+function removeMinorEdit(id) {
+	minoredit = $("#minoredit-" + id);
+	editData = findEditParent(minoredit).data();
+
+	editData = $.map(editData, function(value, index) {
+    	return [value];
+	});
+	meta = editData.shift(); //Remove meta
+	editData.splice(editData.length - 1, 1); //Remove prototype function
+
+	editData = editData.filter(function(action) { return action.id != id; });
+	newData = [];
+	newData.push(meta);
+	newData = newData.concat(editData);
+	findEditParent(minoredit).removeData();
+	findEditParent(minoredit).data(newData);
+	$("#minoredit-" + id).remove();
+	if($("#edit-" + meta.id + "-minoredits").children().length == 0) {
+		$("#edit-" + meta.id).remove();
+	}
+}
+
+function findMinorEditParent(node) {
+	parents = node.parents();
+	return parents.filter(".minoredit");
+}
+
+function findEditParent(node) {
+	parents = node.parents();
+	return parents.filter(".edit");
+}
