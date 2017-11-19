@@ -110,3 +110,8 @@ label {
 .stacked-input {
 	margin-bottom: 0.7rem;
 }
+
+.footer-copyright {
+	font-size: 0.7rem;
+	text-align: right
+}
