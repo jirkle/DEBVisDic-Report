@@ -109,7 +109,7 @@ function xmlToJSON(xml) {
 function compareSynsets(oldSynset, newSynset) {
 	diffs = [];
 	if(oldSynset.POS.$ != newSynset.POS.$) {
-		diff = {"edit_value": newSynset.POS.$, "field_of_edit": "position", "edit_status": 0};
+		diff = {"edit_value": newSynset.POS.$, "edit_value_old": oldSynset.POS.$, "field_of_edit": "position", "edit_status": 0};
 		diff["edit_type"] = resolveEditType(oldSynset.POS.$, newSynset.POS.$);
 		if(diff["edit_type"] == 0) {
 			diff["edit_xpath"] = "/SYNSET";
@@ -119,7 +119,7 @@ function compareSynsets(oldSynset, newSynset) {
 		diffs.push(diff);
 	}
 	if(oldSynset.DEF.$ != newSynset.DEF.$) {
-		diff = {"edit_value": newSynset.DEF.$, "field_of_edit": "definition", "edit_status": 0, "edit_xpath": "/SYNSET/DEF"};
+		diff = {"edit_value": newSynset.DEF.$, "edit_value_old": oldSynset.DEF.$, "field_of_edit": "definition", "edit_status": 0, "edit_xpath": "/SYNSET/DEF"};
 		diff["edit_type"] = resolveEditType(oldSynset.DEF.$, newSynset.DEF.$);
 		if(diff["edit_type"] == 0) {
 			diff["edit_xpath"] = "/SYNSET";
@@ -129,7 +129,7 @@ function compareSynsets(oldSynset, newSynset) {
 		diffs.push(diff);
 	}
 	if(oldSynset.DOMAIN.$ != newSynset.DOMAIN.$) {
-		diff = {"edit_value": newSynset.DOMAIN.$, "field_of_edit": "domain", "edit_status": 0, "edit_xpath": "/SYNSET/DOMAIN"};
+		diff = {"edit_value": newSynset.DOMAIN.$, "edit_value_old": oldSynset.DOMAIN.$, "field_of_edit": "domain", "edit_status": 0, "edit_xpath": "/SYNSET/DOMAIN"};
 		diff["edit_type"] = resolveEditType(oldSynset.DOMAIN.$, newSynset.DOMAIN.$);
 		if(diff["edit_type"] == 0) {
 			diff["edit_xpath"] = "/SYNSET";
@@ -139,7 +139,7 @@ function compareSynsets(oldSynset, newSynset) {
 		diffs.push(diff);
 	}
 	if(oldSynset.SUMO.$ != newSynset.SUMO.$) {
-		diff = {"edit_value": newSynset.SUMO.$, "field_of_edit": "sumo", "edit_status": 0, "edit_xpath": "/SYNSET/SUMO"};
+		diff = {"edit_value": newSynset.SUMO.$, "edit_value_old": oldSynset.SUMO.$, "field_of_edit": "sumo", "edit_status": 0, "edit_xpath": "/SYNSET/SUMO"};
 		diff["edit_type"] = resolveEditType(oldSynset.SUMO.$, newSynset.SUMO.$);
 		if(diff["edit_type"] == 0) {
 			diff["edit_xpath"] = "/SYNSET";
@@ -149,7 +149,7 @@ function compareSynsets(oldSynset, newSynset) {
 		diffs.push(diff);
 	}
 	if(oldSynset.SUMO["@type"] != newSynset.SUMO["@type"]) {
-		diff = {"edit_value": newSynset.SUMO["@type"], "field_of_edit": "type@sumo", "edit_status": 0, "edit_xpath": "/SYNSET/SUMO/@type"};
+		diff = {"edit_value": newSynset.SUMO["@type"], "edit_value_old": oldSynset.SUMO["@type"], "field_of_edit": "type@sumo", "edit_status": 0, "edit_xpath": "/SYNSET/SUMO/@type"};
 		diff["edit_type"] = resolveEditType(oldSynset.SUMO["@type"], newSynset.SUMO["@type"]);
 		if(diff["edit_type"] == 0) {
 			diff["edit_xpath"] = "/SYNSET";
@@ -168,7 +168,7 @@ function compareSynsets(oldSynset, newSynset) {
 			newUsage = "";
 		}
 		if(oldUsage != newUsage) {
-			diff = {"edit_value": "<USAGE>" + newUsage + "</USAGE>", "field_of_edit": "usage", "edit_status": 0};
+			diff = {"edit_value": "<USAGE>" + newUsage + "</USAGE>", "edit_value_old": "<USAGE>" + oldUsage + "</USAGE>", "field_of_edit": "usage", "edit_status": 0};
 			diff["edit_type"] = resolveEditType(oldUsage, newUsage);
 			if(diff["edit_type"] != 0) {
 				diff["edit_xpath"] = "/SYNSET/USAGE[text()='" + oldUsage + "']";
@@ -189,7 +189,12 @@ function compareSynsets(oldSynset, newSynset) {
 			newSyn = {"$": "", "@sense": "", "@lnote": ""};
 		}
 		if(oldSyn.$ != newSyn.$ || oldSyn["@sense"] != newSyn["@sense"] || oldSyn["@lnote"] != newSyn["@lnote"]) {
-			diff = {"edit_value": "<LITERAL sense='" + newSyn["@sense"] + "' lnote='" + newSyn["@lnote"] + "'>" + newSyn.$ + "</LITERAL>", "field_of_edit": "synonym", "edit_status": 0};
+			diff = {
+				"edit_value": "<LITERAL sense='" + newSyn["@sense"] + "' lnote='" + newSyn["@lnote"] + "'>" + newSyn.$ + "</LITERAL>",
+				"edit_value_old": "<LITERAL sense='" + oldSyn["@sense"] + "' lnote='" + oldSyn["@lnote"] + "'>" + oldSyn.$ + "</LITERAL>",
+				"field_of_edit": "synonym",
+				"edit_status": 0
+			};
 			if(oldSyn["@sense"] == "" && oldSyn["@lnote"] == "" && oldSyn.$ == "") {
 				diff["edit_type"] = 0;
 			} else if(newSyn["@sense"] == "" && newSyn["@lnote"] == "" && newSyn.$ == "") {
@@ -222,6 +227,7 @@ function compareSynsets(oldSynset, newSynset) {
 		if(oldRel.$ != newRel.$ || oldRel["@type"] != newRel["@type"] || oldRel["@link"] != newRel["@link"]) {
 			diff = {
 				"edit_value": "<ILR type='" + newRel["@type"] + "' link='" + newRel["@link"] + "'>" + newRel.$ + "</ILR>",
+				"edit_value_old": "<ILR type='" + oldRel["@type"] + "' link='" + oldRel["@link"] + "'>" + oldRel.$ + "</ILR>",
 				"field_of_edit": "relation",
 				"edit_status": 0
 				};

@@ -357,7 +357,7 @@ function insertRelation(node, relation, preview) {
 	registerDeleteHandler(inserted.find(".delete"));
 }
 
-function saveEdits() {
+function getNewSynset() {
 	var obj = getBlankSynset();
 	newSynset = obj.SYNSET;
 	newSynset.ID = synset.ID;
@@ -399,57 +399,59 @@ function saveEdits() {
 			newSynset.ILR.push({"$":"", "@type": "", "@link": ""});
 		}
 	}
+	return newSynset;
+}
 
+function saveEdits() {
+	newSynset = getNewSynset();
 	diff = compareSynsets(synset, newSynset);
-
 	if(diff.length > 0) {
-		var access = dicts[dictionary].access;
-		//if(access == "r") {
-			var usermeta = {
-        		"email": $("#email-input").val(),
-        		"role": "ROLE_USER",
-        		"name": user.name
-    		}
-
-			var meta = {
-				"edit_name": $("#editform-card-title").html(),
-				"dictionary": dicts[dictionary].code,
-				"ili": "",
-				"pwn_id": synsetPWN,
-				"edited_by": usermeta,
-				"actions": diff
-			};
-
-			post = JSON.stringify(meta);
-			$.post(
-    	    	reportServerAddress + "/create_edit/",
-        		post
-    		).done(function(msg) {
-    			alert(localize("report-server-ok"));
-    			reset();
-    			changeRightCard($("#editform-start"));
-    		}).fail(function(msg) {
-    			alert(localize("report-server-error"));
-    		});
-		/*
-		} else {
-			xml = applyActions(synsetXML, diff);
-			changeRightCard($("#editform-start"));
-		}*/
+		deffer = showComparement($("#diff-overview"), diff);
+		deffer.done(function (result) {
+			if(result=="submit") {
+				submit(diff);
+			}
+		});
 	} else {
 		$("#errors-no-edits").show();
 	}
 
 }
 
-function changeRightCard(newCard) {
-	hideAndShow(activeRightCard, newCard);
-	activeRightCard = newCard;
-}
+function submit(diff) {
+	var access = dicts[dictionary].access;
+	//if(access == "r") {
+		var usermeta = {
+       		"email": $("#email-input").val(),
+       		"role": "ROLE_USER",
+       		"name": user.name
+    	}
 
-function hideAndShow(hide, reveal) {
-  	hide.hide();
-  	reveal.show();
+		var meta = {
+			"edit_name": $("#editform-card-title").html(),
+			"dictionary": dicts[dictionary].code,
+			"ili": "",
+			"pwn_id": synsetPWN,
+			"edited_by": usermeta,
+			"actions": diff
+		};
+
+		post = JSON.stringify(meta);
+		$.post(
+   	    	reportServerAddress + "/create_edit/",
+       		post
+   		).done(function(msg) {
+   			alert(localize("report-server-ok"));
+   			reset();
+   			changeRightCard($("#editform-start"));
+   		}).fail(function(msg) {
+   			alert(localize("report-server-error"));
+   		});
+   	/*
+	} else {
+		xml = applyActions(synsetXML, diff);
+		changeRightCard($("#editform-start"));
+	}*/
 }
 
 function reset() {

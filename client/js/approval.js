@@ -138,7 +138,7 @@ function insertMajorEditation(node, json) {
 					} else {
 						oldValue = s.xpath(edit.edit_xpath);
 						if(oldValue.length == 0) {
-							$("#info-" + edit.id).attr("title", "Synset had been edited so the original value cannot be found.");
+							$("#info-" + edit.id).attr("title", localize("old-value-not-found"));
 							$("#info-" + edit.id).show();
 						}
 						try {
@@ -223,16 +223,6 @@ function initMinoreditButtons(node, json, id) {
 		node.find("#minoredit-" + minoredit["id"] + "-refresh").hide();
 		node.find("#minoredit-" + minoredit["id"] + "-undo").hide();
 	}
-}
-
-function changeRightCard(newCard) {
-	hideAndShow(activeRightCard, newCard);
-	activeRightCard = newCard;
-}
-
-function hideAndShow(hide, reveal) {
-  	hide.hide();
-  	reveal.show();
 }
 
 function reset() {

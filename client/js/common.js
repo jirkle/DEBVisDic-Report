@@ -28,6 +28,19 @@ function isJson(str) {
     return true;
 }
 
+function changeRightCard(newCard) {
+	hideAndShow(activeRightCard, newCard);
+	activeRightCard = newCard;
+}
+
+function hideAndShow(hide, reveal) {
+	if(hide) {
+		hide.hide();
+	}
+	if(reveal) {
+		reveal.show();
+	}
+}
 
 function getBlankSynset() {
 	var obj = {
