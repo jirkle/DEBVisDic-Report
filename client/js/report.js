@@ -71,6 +71,7 @@ function init() {
 
 			$("#dictionaries-select").append(dictsOptions);
 			$("#dictionaries-select").change(function() {
+				flushAutocompleteCache();
 				dictionary = $("#dictionaries-select").val();
 				setSearchAutocomplete($("#pwn-input"), dicts[dictionary].code);
 				if(dicts[dictionary].access == "w") {
@@ -544,7 +545,7 @@ window.onbeforeunload = function () {
 }
 
 function revertEdits() {
-	if ($(".input-edited").length > 0) {
+	if ($("#editform .input-edited").length > 0) {
         if(confirm(localize("cancel-question"))) {
         	return true;
         }

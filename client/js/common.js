@@ -1,6 +1,7 @@
 var reportServerAddress = 'http://localhost:9012';
 var serverAddress = 'https://abulafia.fi.muni.cz:9011';
 var editStates = {"To review": 0, "Approved": 1, "Rejected": 2};
+var autocompleteCache = {};
 
 String.prototype.capitalize = function() {
     return this.charAt(0).toUpperCase() + this.slice(1);
@@ -78,20 +79,33 @@ function getBlankSynset() {
 }
 
 function setSearchAutocomplete(input, dict) {
+	$(input).off("change");
 	$(input).addClass("input-loader");
 	input.autocomplete({
     	html: true,
     	source: function( request, response ) {
+    		var term = request.term;
+    		if ( term in autocompleteCache ) {
+          		response( autocompleteCache[term] );
+				return;
+        	}
     		var items = [];
     		$.getJSON( serverAddress + "/" + encodeURIComponent(dict), { action: "queryList", word: this.term }, function( data ) {
         		$.each( data, function( key, val ) {
     	      		var item = {"$": val.label, "@link": val.value, "value": val.value + ": " + val.label, "label": val.value + ": " + val.label};
         	  		items.push(item);
 	        	});
+
+	        	autocompleteCache[term] = items;
     	    	response(items);
       		})
     	},
     	select: function( event, ui ) {
+    		if($(this).attr("origvalue") == ui.item.value) {
+				$(this).removeClass("input-edited");
+			} else {
+				$(this).addClass("input-edited");
+			}
     		data = {"$": ui.item.$, "@link": ui.item["@link"]}
     		$(this).data(data);
     	},
@@ -103,6 +117,10 @@ function setSearchAutocomplete(input, dict) {
     	},
     	minLength: 2
 	});
+}
+
+function flushAutocompleteCache() {
+	autocompleteCache = {};
 }
 
 function setRelationOptions(select, options, selected) {

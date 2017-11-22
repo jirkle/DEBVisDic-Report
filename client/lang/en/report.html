@@ -30,16 +30,16 @@
               <a class="nav-link dropdown-toggle" href="#" id="language-dropdown-cur" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></a>
               <div id="language-dropdown-langs" class="dropdown-menu" aria-labelledby="language-dropdown-cur"></div>
             </li>
-            <li class="nav-item" style="padding: 0.5rem;">
-              Logged in as <span class="username">Jiri Kletecka</span>
+            <li class="nav-item login-info">
+              Logged in as <span class="username"></span>
             </li>
           </ul>
         </div>
       </div><!--/.nav-collapse -->
     </nav>
     <div id="content" class="container wrapper">
-      <div class="row justify-content-md-center">
-        <div id="errors" class="errors row col-12">
+      <div class="row justify-content-center">
+        <div id="errors" class="errors row col">
           <div id="errors-not-found" class="alert alert-danger alert-dismissible fade show" role="alert" style="display: none;">
             <button type="button" class="close" aria-label="Close" onclick="$('#errors-not-found').hide();">
               <span aria-hidden="true">&times;</span>
@@ -78,7 +78,7 @@
           </div>
         </div>
         <div id="cards" class="row">
-          <div id="leftcards" class="col-4">
+          <div id="leftcards" class="col-md-4">
             <form id="selectform" class="form-horizontal" style="display: none">
               <div class="card">
                 <div class="card-header">
@@ -113,10 +113,10 @@
               </div>
             </form>
           </div>
-          <div  id="loader" class="col">
+          <div  id="loader" class="col-md-8">
             <div class="loader"></div>
           </div>
-          <div  id="editform-start" class="col" style="display: none">
+          <div  id="editform-start" class="col-md-8" style="display: none">
             <div class="card">
               <div class="card-header">
                 <h3 id="selectform-card-title">Please select dictionary and word</h3>
@@ -125,7 +125,7 @@
               </div>  
             </div>
           </div>
-          <div  id="editform-noresults" class="col" style="display: none">
+          <div  id="editform-noresults" class="col-md-8" style="display: none">
             <div class="card">
               <div class="card-header">
                 <h3 id="selectform-card-title">No word was found, please select another one</h3>
@@ -134,7 +134,7 @@
               </div>  
             </div>
           </div>
-          <form id="editform" class="form-horizontal col" style="display: none">
+          <form id="editform" class="form-horizontal col-md-8" style="display: none">
             <div class="card">
               <div class="card-header">
                 <h3 id="editform-card-title"></h3>
@@ -144,7 +144,7 @@
                 <!--Basic info-->
                 <!--Domain-->
                 <div id="definition" class="form-group row">
-                  <label class="control-label col-2" for="definition-input">Definition:</label>
+                  <label class="control-label col-md-3" for="definition-input">Definition:</label>
                   <div class="col">
                     <a class="reveal" href="javascript:void(0)"></a>
                     <input id="definition-input" type="text" class="form-control" placeholder="Enter definition" style="display: none;">
@@ -152,7 +152,7 @@
                 </div>
 
                 <div id="domain" class="form-group row">
-                  <label class="control-label col-2" for="domain-input">Domain:</label>
+                  <label class="control-label col-md-3" for="domain-input">Domain:</label>
                   <div class="col">
                     <a class="reveal" href="javascript:void(0)"></a>
                     <input id="domain-input" type="text" class="form-control" placeholder="Enter domain" style="display: none;">
@@ -161,7 +161,7 @@
             
                 <!--Sumo-->
                 <div id="sumo" class="form-group row">
-                  <label class="control-label col-2" for="sumo-input">Sumo:</label>
+                  <label class="control-label col-md-3" for="sumo-input">Sumo:</label>
                   <div class="col">
                     <a class="reveal" href="javascript:void(0)"></a>
                     <input id="sumo-input" type="text" class="form-control" placeholder="Enter sumo" style="display: none;">
@@ -170,7 +170,7 @@
               
                 <!--Sumo type-->
                 <div id="sumo-type" class="form-group row">
-                  <label class="control-label col-2" for="sumo-type-input">Sumo type:</label>
+                  <label class="control-label col-md-3" for="sumo-type-input">Sumo type:</label>
                   <div class="col">
                     <a class="reveal" href="javascript:void(0)"></a>
                     <input id="sumo-type-input" type="text" class="form-control" placeholder="Enter sumo type" style="display: none;">
