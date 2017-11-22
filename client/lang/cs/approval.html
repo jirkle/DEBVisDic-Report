@@ -19,10 +19,10 @@
       <div id="navbar" class="navbar-collapse collapse mr-auto">
         <ul class="navbar-nav">
           <li class="nav-item">
-            <a class="nav-link" href="report.html">Nahlásit</a>
+            <a id="btn-report" class="nav-link" href="report.html">Nahlásit</a>
           </li>
           <li class="nav-item active">
-            <a class="nav-link" href="approval.html">Schválit <span class="sr-only">(současné)</span></a>
+            <a id="btn-approval" class="nav-link" href="approval.html">Schválit <span class="sr-only">(současné)</span></a>
           </li>
         </ul>
         <div style="width:100%">    
@@ -31,8 +31,8 @@
               <a class="nav-link dropdown-toggle" href="#" id="language-dropdown-cur" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"></a>
               <div id="language-dropdown-langs" class="dropdown-menu" aria-labelledby="language-dropdown-cur"></div>
             </li>
-            <li class="nav-item" style="padding: 0.5rem;">
-              Přihlášen jako <span class="username">Jiri Kletecka</span>
+            <li class="nav-item login-info">
+              Přihlášen jako <span class="username"></span>
             </li>
           </ul>
         </div>
@@ -41,6 +41,12 @@
     <div id="content" class="container wrapper">
       <div class="row justify-content-md-center">
         <div id="errors" class="errors row col-12">
+          <div id="errors-no-dictionary" class="alert alert-danger alert-dismissible fade show" role="alert" style="display: none;">
+            <button type="button" class="close" aria-label="Close" onclick="$('#errors-no-dictionary').hide();">
+              <span aria-hidden="true">&times;</span>
+            </button>
+            <strong>Chyba!</strong> Nemáte žádný slovník s právem zápisu.
+          </div>
           <div id="errors-accepted" class="alert alert-success alert-dismissible fade show" role="alert" style="display: none;">
             <button type="button" class="close" aria-label="Close" onclick="$('#errors-errors-accepted').hide();">
               <span aria-hidden="true">&times;</span>
@@ -73,7 +79,7 @@
           </div>
         </div>
         <div id="cards" class="row">
-          <div id="leftcards" class="col-3">
+          <div id="leftcards" class="col-lg-3">
             <form id="selectform" class="form-horizontal">
               <div class="card">
                 <div class="card-header">
@@ -86,7 +92,7 @@
                   </div>
                   <label class="control-label" for="edit-status">Stav úpravy:</label>
                   <div id="edit-status" class="form-group row">
-                      <select id="edit-status-select" class="form-control" type="text"><option value='0' selected>Ke schválení</option><option value='1'>Schváleno</option><option value='2'>Odmítnuto</option></select>
+                      <select id="edit-status-select" class="form-control" type="text"><option value='0' selected>Ke schválení</option><option value='1'>Schváleno</option><option value='2'>Zamítnuto</option></select>
                   </div>
                   <label class="control-label" for="edit-type">Typ úpravy:</label>
                   <div id="edit-type" class="form-group row">

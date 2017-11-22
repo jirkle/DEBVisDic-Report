@@ -5,8 +5,8 @@ var editFieldFilter = "";
 var statusFilter = "0";
 
 
-var editHTML = '<div id="edit-{id}" class="card edit"><div class="card-header" role="tab" id="headingOne"><h5 class="mb-0 row"><a id="edit-{id}-accordion" class="col-10 row" data-toggle="collapse" data-parent="#accordion" href="#edit-collapse-{id}" aria-expanded="true" aria-controls="edit-collapse-{id}"><div class="col-6">{name}</div><div class="col-3">{user}</div><div class="col-3">{date}</div></a><div class="col-2"><a id="edit-{id}-approve" class="delete btn btn-primary" href="javascript:void(0)"><img src="../../img/approve.png"></a><a id="edit-{id}-cancel" class="delete btn btn-danger" href="javascript:void(0)"><img src="../../img/cancel.png"></a><a id="edit-{id}-undo" class="delete btn btn-primary" href="javascript:void(0)"><img src="../../img/reload.png"></a><a id="edit-{id}-refresh" class="delete btn btn-primary" href="javascript:void(0)"><img src="../../img/reload.png"></a></div></h5></div><div id="edit-collapse-{id}" class="collapse" role="tabpanel"><div  id="edit-{id}-minoredits" class="card-block"></div></div></div>';
-var minorEditHTML = '<div id="minoredit-{id}" class="row minoredit"><div class="col-3"><div class="badge badge-primary">{type}</div>{field}</div><div class="col-7 row"><div  id="loader-{id}" class="loader-collapse col-1"><div class="loader-small"></div></div><div class="col"><img id="info-{id}" class="info" src="../../img/info.png" style="display:none"><span id="minoredit-{id}-old" class="oldValue"></span> → <span id="minoredit-{id}-new" class="newValue">{new}</span></div></div><div class="col-2"><a id="minoredit-{id}-approve" class="approve btn btn-primary" href="javascript:void(0)"><img src="../../img/approve.png"></a><a id="minoredit-{id}-cancel" class="delete btn btn-danger" href="javascript:void(0)"><img src="../../img/cancel.png"></a><a id="minoredit-{id}-undo" class="delete btn btn-primary" href="javascript:void(0)"><img src="../../img/reload.png"></a><a id="minoredit-{id}-refresh" class="delete btn btn-primary" href="javascript:void(0)"><img src="../../img/reload.png"></a></div></div></div>';
+var editHTML = '<div id="edit-{id}" class="card edit"><div class="card-header" role="tab"><h5 class="mb-0 row"><a id="edit-{id}-accordion" class="row col" data-toggle="collapse" data-parent="#accordion" href="#edit-collapse-{id}" aria-expanded="true" aria-controls="edit-collapse-{id}"><div class="col-md">{name}</div><div class="col-md-6 row"><div class="col">{user}</div><div class="col">{date}</div></div></a><div class="col-2"><a id="edit-{id}-approve" class="btn btn-primary approve" href="javascript:void(0)"><img src="../../img/approve.png"></a><a id="edit-{id}-cancel" class="btn btn-danger" href="javascript:void(0)"><img src="../../img/cancel.png"></a><a id="edit-{id}-undo" class="btn btn-primary" href="javascript:void(0)"><img src="../../img/reload.png"></a><a id="edit-{id}-refresh" class="btn btn-primary" href="javascript:void(0)"><img src="../../img/reload.png"></a></div></h5></div><div id="edit-collapse-{id}" class="collapse" role="tabpanel"><div  id="edit-{id}-minoredits" class="card-block"></div></div></div>';
+var minorEditHTML = '<div id="minoredit-{id}" class="row minoredit"><div class="col row"><div class="col-md-4"><div class="badge badge-primary">{type}</div>{field}</div><div class="col row"><div  id="loader-{id}" class="loader-collapse col-1"><div class="loader-small"></div></div><div class="col"><img id="info-{id}" class="info" src="../../img/info.png" style="display:none"><span id="minoredit-{id}-old" class="oldValue"></span> → <span id="minoredit-{id}-new" class="newValue">{new}</span></div></div></div><div class="col-2"><a id="minoredit-{id}-approve" class="approve btn btn-primary" href="javascript:void(0)"><img src="../../img/approve.png"></a><a id="minoredit-{id}-cancel" class="btn btn-danger" href="javascript:void(0)"><img src="../../img/cancel.png"></a><a id="minoredit-{id}-undo" class="btn btn-primary" href="javascript:void(0)"><img src="../../img/reload.png"></a><a id="minoredit-{id}-refresh" class="btn btn-primary" href="javascript:void(0)"><img src="../../img/reload.png"></a></div></div></div>';
 
 var editations; //Synset XML
 var reloadAlert = false;
@@ -33,42 +33,43 @@ function init() {
        	user = msg.user;
        	$(".username").html(user.name);
 
+		var writableDicts = getWriteableDicts(dicts);
 		var dictsOptions = "";
-		for (var key in dicts) {
-			if(dicts[key].access == "w") {
- 				dictsOptions += "<option value='" + dicts[key].code + "'>" + dicts[key].name + "</option>";
-			}
+		for (var i in writableDicts) {
+ 			dictsOptions += "<option value='" + writableDicts[i].code + "'>" + writableDicts[i].name + "</option>";
 		}
+		if(dictsOptions == "") {
+			$("#errors-no-dictionary").show();
+		} else {
+			$("#dictionaries-select").append(dictsOptions);
+			$("#dictionaries-select").change(function() {
+				dictionary = $("#dictionaries-select").val();
+				setSearchAutocomplete($("#pwn-input"), dictionary);
+			});
+			$("#dictionaries-select").change();
 
-		$("#dictionaries-select").append(dictsOptions);
-		$("#dictionaries-select").change(function() {
-			dictionary = $("#dictionaries-select").val();
-			setSearchAutocomplete($("#pwn-input"), dictionary);
-		});
-		$("#dictionaries-select").change();
+			$("#edit-status-select").change(function() {
+				statusFilter = $("#edit-status-select").val();
+			});
 
-		$("#edit-status-select").change(function() {
-			statusFilter = $("#edit-status-select").val();
-		});
+			$("#edit-type-select").change(function() {
+				editTypeFilter = $("#edit-type-select").val();
+			});
 
-		$("#edit-type-select").change(function() {
-			editTypeFilter = $("#edit-type-select").val();
-		});
+			$("#edit-field-select").change(function() {
+				editFieldFilter = $("#edit-field-select").val();
+			});
 
-		$("#edit-field-select").change(function() {
-			editFieldFilter = $("#edit-field-select").val();
-		});
-
-		$("#btn-select").click(function(e) {
-			e.preventDefault();
-			onFiltersChange();	
-		});			
-		$("#btn-select").click();
-
-		}).fail(function() {
-			$("#loader").hide();
-    		alert("Can't reach server!");
-  		});
+			$("#btn-select").click(function(e) {
+				e.preventDefault();
+				onFiltersChange();	
+			});			
+			$("#btn-select").click();
+		}
+	}).fail(function() {
+		$("#loader").hide();
+    	alert("Can't reach server!");
+	});		
 }
 
 function onFiltersChange() {
@@ -95,6 +96,7 @@ function onFiltersChange() {
         }
     ).fail(function() {
 		$("#errors-offline").show();
+		$("#loader").hide();
   	});
 	
 }

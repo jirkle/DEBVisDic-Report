@@ -23,6 +23,7 @@ loc = {
 	"btn-save": "save",
 	"btn-cancel": "cancel",
 	"btn-select": "select",
+	"btn-add": "add",
 	
 	//Report
 	"relation-selectbox-do-selection": "select relation type",
@@ -53,5 +54,6 @@ loc = {
 	"report-server-error": "Can't reach report server! Try again later.",
 	"debdict-server-error": "Can't reach DEBVisDic server! Try again later.",
 	"server-error": "Can't reach the servers! Try again later.",
-	"multiple-edit-error": "Previous editation is being processed. Please wait a second and then try it again."
+	"multiple-edit-error": "Previous editation is being processed. Please wait a second and then try it again.",
+	"no-writeable-dictionary-error": "No writable dictionary found."
 };

@@ -36,6 +36,12 @@ function init() {
        	$(".username").html(user.name);
        	$("#email-input").val(user.email);
 
+       	writable = getWriteableDicts(dicts);
+       	if(writable.length == 0) {
+       		$("#btn-approval").attr("href", "javascript:void(0)");
+       		$("#btn-approval").attr("title", localize("no-writeable-dictionary-error"));
+       	}
+
        	dictsRelationTypes = new Array();
        	for (var dict in dicts) {
     		(function(dict, dicts) {
@@ -204,7 +210,7 @@ function parseXML() {
 		$("#definition a").html(synset.DEF.$);
 		$("#definition input").val(synset.DEF.$);
 	} else {
-		$("#definition a").html("Add");
+		$("#definition a").html(localize("btn-add").capitalize());
 		$("#definition a").addClass("btn btn-primary");
 		$("#definition input").val("");
 	}
@@ -216,7 +222,7 @@ function parseXML() {
 		$("#domain a").html(synset.DOMAIN.$);
 		$("#domain input").val(synset.DOMAIN.$);
 	} else {
-		$("#domain a").html("Add");
+		$("#domain a").html(localize("btn-add").capitalize());
 		$("#domain a").addClass("btn btn-primary");
 		$("#domain input").val("");
 	}
@@ -228,7 +234,7 @@ function parseXML() {
 		$("#sumo a").html(synset.SUMO.$);
 		$("#sumo input").val(synset.SUMO.$);
 	} else {
-		$("#sumo a").html("Add");
+		$("#sumo a").html(localize("btn-add").capitalize());
 		$("#sumo a").addClass("btn btn-primary");
 		$("#sumo input").val("");
 	}
@@ -240,7 +246,7 @@ function parseXML() {
 		$("#sumo-type a").html(synset.SUMO["@type"]);
 		$("#sumo-type input").val(synset.SUMO["@type"]);
 	} else {
-		$("#sumo-type a").html("Add");
+		$("#sumo-type a").html(localize("btn-add").capitalize());
 		$("#sumo-type a").addClass("btn btn-primary");
 		$("#sumo-type input").val("");
 	}
@@ -262,10 +268,6 @@ function parseXML() {
 		rel = synset.ILR[j];
 		insertRelation($("#relations"), rel, true);
 	}
-}
-
-function parseToXML() {
-	return "";
 }
 
 function insertUsage(node, content, preview) {
@@ -357,7 +359,7 @@ function insertRelation(node, relation, preview) {
 	registerDeleteHandler(inserted.find(".delete"));
 }
 
-function getNewSynset() {
+function parseToXML() {
 	var obj = getBlankSynset();
 	newSynset = obj.SYNSET;
 	newSynset.ID = synset.ID;
@@ -367,9 +369,9 @@ function getNewSynset() {
 	newSynset.DEF = {"$": $("#definition-input").val()};
 	for(i = 0; i < usagesCount; i++) {
 		if($("#usage-" + i).is(":visible")) {
-			newSynset.USAGE.push($("#usage-" + i + "-input").val());
+			newSynset.USAGE.push({"$": $("#usage-" + i + "-input").val()});
 		} else {
-			newSynset.USAGE.push("");
+			newSynset.USAGE.push({"$": ""});
 		}
 	}
 	for(i = 0; i < synonymsCount; i++) {
@@ -403,43 +405,42 @@ function getNewSynset() {
 }
 
 function saveEdits() {
-	newSynset = getNewSynset();
+	newSynset = parseToXML();
 	diff = compareSynsets(synset, newSynset);
 	if(diff.length > 0) {
 		deffer = showComparement($("#diff-overview"), diff);
 		deffer.done(function (result) {
 			if(result=="submit") {
-				submit(diff);
+				submit(diff, newSynset);
 			}
 		});
 	} else {
 		$("#errors-no-edits").show();
 	}
-
 }
 
-function submit(diff) {
+function submit(diff, newSynset) {
 	var access = dicts[dictionary].access;
-	//if(access == "r") {
-		var usermeta = {
-       		"email": $("#email-input").val(),
-       		"role": "ROLE_USER",
-       		"name": user.name
-    	}
+	var usermeta = {
+    	"email": $("#email-input").val(),
+    	"role": "ROLE_USER",
+    	"name": user.name
+    }
 
-		var meta = {
-			"edit_name": $("#editform-card-title").html(),
-			"dictionary": dicts[dictionary].code,
-			"ili": "",
-			"pwn_id": synsetPWN,
-			"edited_by": usermeta,
-			"actions": diff
-		};
+	var meta = {
+		"edit_name": $("#editform-card-title").html(),
+		"dictionary": dicts[dictionary].code,
+		"ili": "",
+		"pwn_id": synsetPWN,
+		"edited_by": usermeta,
+		"actions": diff
+	};
 
-		post = JSON.stringify(meta);
+	if(access == "r") {	
+		reportData = JSON.stringify(meta);
 		$.post(
    	    	reportServerAddress + "/create_edit/",
-       		post
+       		reportData
    		).done(function(msg) {
    			alert(localize("report-server-ok"));
    			reset();
@@ -447,11 +448,49 @@ function submit(diff) {
    		}).fail(function(msg) {
    			alert(localize("report-server-error"));
    		});
-   	/*
 	} else {
-		xml = applyActions(synsetXML, diff);
-		changeRightCard($("#editform-start"));
-	}*/
+		$.get(
+			serverAddress + "/" + encodeURIComponent(meta["dictionary"]) + "?action=runQuery&query=" + encodeURIComponent(meta["pwn_id"]) + "&outtype=plain"
+		).done(function (msg) {
+			applyActions(synsetXML, diff).done(function() {
+				changes = this.changes;
+				$(diff).each(function(i) {
+					this["edit_value_old"] = this["edit_value"];
+					this["edit_type"] = changes[i].edit_type;
+					this["edit_value"] = changes[i].edit_value;
+					this["edit_xpath"] = changes[i].edit_xpath;
+					this["edit_status"] = 1;
+				});
+				debData = JSON.stringify(xmlToJSON(this.str));
+				reportData = JSON.stringify(meta);
+				feedbacks = [];
+				feedbacks.push(
+					$.post(serverAddress + "/" + meta.dictionary, {
+						action: "save",
+						id: meta.pwn_id,
+						data: debData
+					})
+				);	
+				feedbacks.push(
+					$.post(
+   	    				reportServerAddress + "/create_edit/",
+       					reportData
+   					)
+				);
+				
+				$.when.apply($, feedbacks).done(function() {
+					alert(localize("report-server-ok"));
+					reset();
+					changeRightCard($("#editform-start"));
+				}).fail(function (msg) {
+					console.log(msg);
+					alert(localize("server-error"));
+				});
+			});
+		}).fail(function (msg) {
+			alert(localize("debdict-server-error"));	
+		});
+	}
 }
 
 function reset() {
@@ -491,7 +530,7 @@ function registerDeleteHandler(node) {
 }
 
 function closeWindow() {
-	if(confirm(localize("cancel-question"))) {
+	if(revertEdits()) {
 		window.close();
 	}
 }

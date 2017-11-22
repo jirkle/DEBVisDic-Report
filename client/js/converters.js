@@ -161,17 +161,17 @@ function compareSynsets(oldSynset, newSynset) {
 	for(i = 0; i < Math.max(oldSynset.USAGE.length, newSynset.USAGE.length); i++) {
 		oldUsage = oldSynset.USAGE[i];
 		if(!oldUsage) {
-			oldUsage = "";
+			oldUsage = {"$": ""};
 		}
 		newUsage = newSynset.USAGE[i];
 		if(!newUsage) {
-			newUsage = "";
+			newUsage = {"$": ""};
 		}
-		if(oldUsage != newUsage) {
-			diff = {"edit_value": "<USAGE>" + newUsage + "</USAGE>", "edit_value_old": "<USAGE>" + oldUsage + "</USAGE>", "field_of_edit": "usage", "edit_status": 0};
-			diff["edit_type"] = resolveEditType(oldUsage, newUsage);
+		if(oldUsage.$ != newUsage.$) {
+			diff = {"edit_value": "<USAGE>" + newUsage.$ + "</USAGE>", "edit_value_old": "<USAGE>" + oldUsage.$ + "</USAGE>", "field_of_edit": "usage", "edit_status": 0};
+			diff["edit_type"] = resolveEditType(oldUsage.$, newUsage.$);
 			if(diff["edit_type"] != 0) {
-				diff["edit_xpath"] = "/SYNSET/USAGE[text()='" + oldUsage + "']";
+				diff["edit_xpath"] = "/SYNSET/USAGE[text()='" + oldUsage.$ + "']";
 			} else {
 				diff["edit_xpath"] = "/SYNSET";
 			}

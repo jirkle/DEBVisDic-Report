@@ -1,8 +1,8 @@
-.badge, .btn {
+.btn {
+	margin-right: 0.5rem;
 	height: 1.5rem;
-	padding: 0.2rem 0.5rem;
+	padding: 0rem 0.5rem 0.3rem 0.5rem;
 	font-size: 0.9rem;
-
 }
 
 .btn img {
@@ -27,7 +27,7 @@
 }
 
 .approve {
-	margin-right: 10px; 
+	margin-right: 0.5rem;
 }
 
 .info {

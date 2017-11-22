@@ -42,6 +42,16 @@ function hideAndShow(hide, reveal) {
 	}
 }
 
+function getWriteableDicts(dicts) {
+	writable = [];
+	for (var key in dicts) {
+		if(dicts[key].access == "w") {
+			writable.push(dicts[key]);
+ 		}
+	}
+	return writable;
+}
+
 function getBlankSynset() {
 	var obj = {
 		'SYNSET': {

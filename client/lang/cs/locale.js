@@ -23,6 +23,7 @@ loc = {
 	"btn-save": "uložit",
 	"btn-cancel": "zrušit",
 	"btn-select": "vybrat",
+	"btn-add": "přidat",
 	
 	//Report
 	"relation-selectbox-do-selection": "vyberte typ vztahu",
@@ -53,5 +54,6 @@ loc = {
 	"report-server-error": "Nemohu se připojit na server pro vytváření úprav! Prosím, opakujte akci později.",
 	"debdict-server-error": "Nemohu se připojit na server DEBVisDic! Prosím, opakujte akci později.",
 	"server-error": "Nemohu se připojit na server! Prosím, opakujte akci později.",
-	"multiple-edit-error": "Předešlá úprava se zpracovává. Prosím vyčkejte a pak opakujte akci znovu."
+	"multiple-edit-error": "Předešlá úprava se zpracovává. Prosím vyčkejte a pak opakujte akci znovu.",
+	"no-writeable-dictionary-error": "Nemáte právo k zápisu do žádného slovníku."
 };
