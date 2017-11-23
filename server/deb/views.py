@@ -200,10 +200,6 @@ def change_status_edit(request):
                     except:
                         pass
                     try:
-                        edit.edit_type = item["edit_type"]
-                    except:
-                        pass
-                    try:
                         edit.edit_xpath = item["edit_xpath"]
                     except:
                         pass

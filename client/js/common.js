@@ -90,9 +90,9 @@ function setSearchAutocomplete(input, dict) {
 				return;
         	}
     		var items = [];
-    		$.getJSON( serverAddress + "/" + encodeURIComponent(dict), { action: "queryList", word: this.term }, function( data ) {
+    		$.getJSON( serverAddress + "/" + encodeURIComponent(dict), { action: "queryList", word: term }, function( data ) {
         		$.each( data, function( key, val ) {
-    	      		var item = {"$": val.label, "@link": val.value, "value": val.value + ": " + val.label, "label": val.value + ": " + val.label};
+    	      		var item = {"content": val.label, "$": val.value, "value": val.value + ": " + val.label, "label": val.value + ": " + val.label};
         	  		items.push(item);
 	        	});
 
@@ -106,7 +106,7 @@ function setSearchAutocomplete(input, dict) {
 			} else {
 				$(this).addClass("input-edited");
 			}
-    		data = {"$": ui.item.$, "@link": ui.item["@link"]}
+    		data = {"$": ui.item.$, "content": ui.item["content"]}
     		$(this).data(data);
     	},
     	search: function( event, ui ) {
@@ -402,8 +402,11 @@ function updateSynset(synset, actions, meta, newState) {
 			status = "status_" + newState;
 			reportData = {"edited_by": meta["edited_by"]};
 			reportData[status] = this.changes;
-			newSynset = this.str;
-			jsoned = JSON.stringify(xmlToJSON(newSynset));
+			newSynset = xmlToJSON(this.str);
+			$(newSynset.SYNSET.ILR).each(function(i) {
+				delete this["content"];
+			});
+			jsoned = JSON.stringify(newSynset);
 			reportData = JSON.stringify(reportData);
 			feedbacks = [];
 			feedbacks.push(

@@ -80,8 +80,9 @@ function onFiltersChange() {
 	$("#errors-offline").hide();
 	$("#errors-error").hide();
 	reset();
+	pwn_id = $("#pwn-input").data().$ ? $("#pwn-input").data().$ : "";
 	$.get(
-        reportServerAddress + '/get_all_edits/?dictionary="' + encodeURIComponent(dictionary) +'"&pwn_id="' + $("#pwn-input").val() +'"&edit_status="' + statusFilter +'"&field="' + editFieldFilter +'"&type="' + editTypeFilter + '"',
+        reportServerAddress + '/get_all_edits/?dictionary="' + encodeURIComponent(dictionary) +'"&pwn_id="' + pwn_id +'"&edit_status="' + statusFilter +'"&field="' + editFieldFilter +'"&type="' + editTypeFilter + '"',
         null,
         function(data) {
         	editations = data;

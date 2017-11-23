@@ -69,8 +69,8 @@ function xmlToJSON(xml) {
     if(e.length > 0) {
     	for(i = 0; i < e.length; i++){
     		synset["ILR"].push({
-                 '$': e[i].textContent,
-                 '@link': $(e[i]).attr("link"),
+                 'content': e[i].textContent,
+                 '$': $(e[i]).attr("link"),
                  '@type': $(e[i]).attr("type")
              });
     	}
@@ -214,32 +214,32 @@ function compareSynsets(oldSynset, newSynset) {
 	for(i = 0; i < Math.max(oldSynset.ILR.length, newSynset.ILR.length); i++) {
 		oldRel = oldSynset.ILR[i];
 		if(!oldRel) {
-			oldRel = {"$": "", "@link": "", "@type": ""};
+			oldRel = {"$": "", "content": "", "@type": ""};
 		}
 		
 		newRel = newSynset.ILR[i];
 		if(!newRel) {
-			newRel = {"$": "", "@link": "", "@type": ""};
+			newRel = {"$": "", "content": "", "@type": ""};
 		}
-		if(oldRel["@link"] == "" && newRel["@link"] == "") {
+		if(oldRel["$"] == "" && newRel["$"] == "") {
 			continue;
 		}
-		if(oldRel.$ != newRel.$ || oldRel["@type"] != newRel["@type"] || oldRel["@link"] != newRel["@link"]) {
+		if(oldRel.content != newRel.content || oldRel["@type"] != newRel["@type"] || oldRel.$ != newRel.$) {
 			diff = {
-				"edit_value": "<ILR type='" + newRel["@type"] + "' link='" + newRel["@link"] + "'>" + newRel.$ + "</ILR>",
-				"edit_value_old": "<ILR type='" + oldRel["@type"] + "' link='" + oldRel["@link"] + "'>" + oldRel.$ + "</ILR>",
+				"edit_value": "<ILR type='" + newRel["@type"] + "' link='" + newRel.$ + "'>" + newRel.content + "</ILR>",
+				"edit_value_old": "<ILR type='" + oldRel["@type"] + "' link='" + oldRel.$ + "'>" + oldRel.content + "</ILR>",
 				"field_of_edit": "relation",
 				"edit_status": 0
 				};
-			if(oldRel.$ == "" && oldRel["@type"] == "" && oldRel["@link"] == "") {
+			if(oldRel.$ == "" && oldRel["@type"] == "" && oldRel.content == "") {
 				diff["edit_type"] = 0;
-			} else if(newRel["@type"] == "" && newRel.$ == "" && newRel["@link"] == "") {
+			} else if(newRel["@type"] == "" && newRel.$ == "" && newRel.content == "") {
 				diff["edit_type"] = 2;
 			} else {
 				diff["edit_type"] = 1;
 			}
 			if(diff["edit_type"] != 0) {
-				diff["edit_xpath"] = "/SYNSET/ILR[@type='" + oldRel["@type"] + "' and @link='" + oldRel["@link"] + "']";
+				diff["edit_xpath"] = "/SYNSET/ILR[@type='" + oldRel["@type"] + "' and @link='" + oldRel.$ + "']";
 			} else {
 				diff["edit_xpath"] = "/SYNSET";
 			}

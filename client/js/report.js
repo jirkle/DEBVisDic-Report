@@ -90,15 +90,19 @@ function init() {
 
 			$("#definition a").click(function() {
 				hideAndShow($("#definition a"), $("#definition input"));
+				$("#definition input").focus();
 			});
 			$("#domain a").click(function() {
 				hideAndShow($("#domain a"), $("#domain input"));
+				$("#domain input").focus();
 			});
 			$("#sumo a").click(function() {
 				hideAndShow($("#sumo a"), $("#sumo input"));
+				$("#sumo input").focus();
 			});
 			$("#sumo-type a").click(function() {
 				hideAndShow($("#sumo-type a"), $("#sumo-type input"));
+				$("#sumo-type input").focus();
 			});
 			$( "#usage-add a" ).click(function() {
 				insertUsage($("#usages"), "", false);
@@ -107,7 +111,7 @@ function init() {
 				insertSynonym($("#synonyms"), "", "", "", false);
 			});
 			$( "#relation-add a" ).click(function() {
-				insertRelation($("#relations"), {"$": "", "@link": "", "@type": ""}, false);
+				insertRelation($("#relations"), {"$": "", "content": "", "@type": ""}, false);
 			});
 
 			$("#btn-cancel").click(function() {
@@ -154,7 +158,7 @@ function onPWNchange() {
 	$("#errors-offline").hide();
 	$("#errors-error").hide();
 	$("#errors-no-edits").hide();
-	synsetPWN = $("#pwn-input").data()["@link"];
+	synsetPWN = $("#pwn-input").data().$;
 	dictionary = $("#dictionaries-select").val();
 	if(!synsetPWN || !dictionary || dictionary == "" || synsetPWN == "") {
 		$("#errors-fill").show();
@@ -282,10 +286,12 @@ function insertUsage(node, content, preview) {
 	if(preview) {
 		reveal.click(function() {
 			hideAndShow($(this), $(this).next());
+			$(this).next().find("input").first().focus();
 		});
 		reveal.next().hide();
 	} else {
 		reveal.hide();
+		reveal.next().find("input").first().focus();
 	}
 
 	inserted.find("input:text").each(function(i) {
@@ -309,10 +315,12 @@ function insertSynonym(node, literal, sense, lnote, preview) {
 	if(preview) {
 		reveal.click(function() {
 			hideAndShow($(this), $(this).next());
+			$(this).next().find("input").first().focus();
 		});
 		reveal.next().hide();
 	} else {
 		reveal.hide();
+		reveal.next().find("input").first().focus();
 	}
 
 	inserted.find("input:text").each(function(i) {
@@ -328,10 +336,10 @@ function insertRelation(node, relation, preview) {
 	relationsCount++;
 	var html = relationsHTML;
 	html = html.replace(/{id}/gi, id);
-	content = relation["@link"];
-	if(relation.$ != "") {
+	content = relation.$;
+	if(relation.content != "") {
 		content += ": ";
-		content += "[" + relation["@link"].slice(-1) + "] " + relation.$;
+		content += "[" + relation.$.slice(-1) + "] " + relation.content;
 	}
 
 	html = html.replace(/{content}/gi, content); //Label
@@ -344,10 +352,12 @@ function insertRelation(node, relation, preview) {
 	if(preview) {
 		reveal.click(function() {
 			hideAndShow($(this), $(this).next());
+			$(this).next().find("input").first().focus();
 		});
 		reveal.next().hide();
 	} else {
 		reveal.hide();
+		reveal.next().find("input").first().focus();
 	}
 
 	inserted.find("input:text").each(function(i) {
@@ -462,7 +472,11 @@ function submit(diff, newSynset) {
 					this["edit_xpath"] = changes[i].edit_xpath;
 					this["edit_status"] = 1;
 				});
-				debData = JSON.stringify(xmlToJSON(this.str));
+				newSynset = xmlToJSON(this.str);
+				$(newSynset.SYNSET.ILR).each(function(i) {
+					delete this["content"];
+				});
+				debData = JSON.stringify(newSynset);
 				reportData = JSON.stringify(meta);
 				feedbacks = [];
 				feedbacks.push(
@@ -486,6 +500,7 @@ function submit(diff, newSynset) {
 				}).fail(function (msg) {
 					console.log(msg);
 					alert(localize("server-error"));
+					onPWNchange();
 				});
 			});
 		}).fail(function (msg) {
