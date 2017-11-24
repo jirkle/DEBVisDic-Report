@@ -79,6 +79,7 @@ function getBlankSynset() {
 }
 
 function setSearchAutocomplete(input, dict) {
+	flushAutocompleteCache();
 	$(input).off("change");
 	$(input).addClass("input-loader");
 	input.autocomplete({

@@ -1,4 +1,4 @@
-row = "<div id='diff-overview-{id}' class='row'><div class='col-3 right-border'><div class='badge badge-primary'>{type}</div>{field}</div><div class='col-4 text-right'><img id='minoredit-info-{id}' class='info' src='img/info.png' style='display:none'><span id='minoredit-{id}-old' class='oldValue'>{old}</span></div><div class='col-1 text-center'> → </div><div class='col-4'><span id='minoredit-{id}-new' class='newValue'>{new}</span></div></div>"
+row = "<div id='diff-overview-{id}'><div class='diff-overview-title'><div class='badge badge-primary'>{type}</div>{field}</div><div class='row diff-overview-diff-content'><div class='col text-right'><span id='minoredit-{id}-old' class='oldValue'>{old}</span></div><div class='col-1 text-center'> → </div><div class='col'><span id='minoredit-{id}-new' class='newValue'>{new}</span></div></div></div>"
 
 function showComparement(node, oldXml, newXml) {
 	oldSynset = xmlToJSON(oldXml).SYNSET;

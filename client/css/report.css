@@ -5,3 +5,7 @@
 #editform {
 	width: 100%;
 }
+
+.diff-overview-title .badge {
+	margin-right: 0.5rem;
+}

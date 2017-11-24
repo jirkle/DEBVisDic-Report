@@ -35,9 +35,9 @@ function init() {
 
 		var writableDicts = getWriteableDicts(dicts);
 		var dictsOptions = "";
-		for (var i in writableDicts) {
- 			dictsOptions += "<option value='" + writableDicts[i].code + "'>" + writableDicts[i].name + "</option>";
-		}
+		$(writableDicts).each(function(i) {
+			dictsOptions += "<option value='" + this.code + "'>" + this.name + "</option>";
+		});
 		if(dictsOptions == "") {
 			$("#errors-no-dictionary").show();
 		} else {

@@ -71,7 +71,6 @@ function init() {
 
 			$("#dictionaries-select").append(dictsOptions);
 			$("#dictionaries-select").change(function() {
-				flushAutocompleteCache();
 				dictionary = $("#dictionaries-select").val();
 				setSearchAutocomplete($("#pwn-input"), dicts[dictionary].code);
 				if(dicts[dictionary].access == "w") {
