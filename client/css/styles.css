@@ -64,12 +64,8 @@
 	width: 100%;
 }
 
-#userform {
-	margin-top: 15px;
-}
-
-#editform {
-	width: 100%;
+#selectform {
+	margin-bottom: 1rem;
 }
 
 #loader {
@@ -81,7 +77,7 @@
 }
 
 .card-block {
-	padding: 2rem 1.4rem 2rem 2rem;
+	padding: 2rem 2rem 2rem 2rem;
 }
 
 label {

@@ -396,53 +396,6 @@ function resolveEditType(oldString, newString) {
 	return 1;
 }
 
-function updateSynset(synset, actions, meta, newState) {
-	applyActions(synset, actions).done(function () {
-		if(this.changes.length > 0) {
-			status = "status_" + newState;
-			reportData = {"edited_by": meta["edited_by"]};
-			reportData[status] = this.changes;
-			newSynset = xmlToJSON(this.str);
-			$(newSynset.SYNSET.ILR).each(function(i) {
-				delete this["content"];
-			});
-			jsoned = JSON.stringify(newSynset);
-			reportData = JSON.stringify(reportData);
-			feedbacks = [];
-			feedbacks.push(
-				$.post(serverAddress + "/" + meta.dictionary, {
-					action: "save",
-					id: meta.pwn_id,
-					data: jsoned
-				})
-			);	
-			feedbacks.push(
-				$.post(
-					reportServerAddress + "/change_status_edit/",
-					reportData
-				)
-			);
-			$.when.apply($, feedbacks).done(function() {
-				alert("Synset saved!");
-				for(j=0; j < changes.length; j++) {
-					$("#minoredit-" + changes[j].id).remove();
-				}
-				if($("#edit-" + meta.id + "-minoredits").children().length == 0) {
-					$("#edit-" + meta.id).remove();
-				}
-				lock = false;
-			}).fail(function (msg) {
-				console.log(msg);
-				alert(localize("server-error"));
-				lock = false;
-			});
-		} else {
-			lock = false;
-		}
-	});
-	
-}
-
 function initLocalesDropdown(page) {
 	l = locales[curLocalization];
 	for (var key in locales) {
